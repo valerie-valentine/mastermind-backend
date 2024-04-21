@@ -15,3 +15,33 @@ class Game(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id"), nullable=True)
     user = db.relationship("User", back_populates="games")
+
+    def to_dict(self):
+        game_dict = dict(
+            game_id=self.game_id,
+            lives=self.answer,
+            difficulty_level=self.difficulty_level,
+            answer=self.answer,
+            num_min=self.num_min,
+            num_max=self.num_max,
+            game_status=self.game_status,
+            guesses=self.guesses,
+            time_stamp=self.timestamp)
+
+        if self.user_id:
+            game_dict["user_id"] = self.user_id
+
+        return game_dict
+
+    @classmethod
+    def from_dict(cls, game_data):
+        new_game = cls(
+            user_id=game_data.get("user_id"),
+            lives=game_data["lives"],
+            difficulty_level=game_data["difficulty_level"],
+            num_min=game_data["num_min"],
+            num_max=game_data["num_max"],
+            game_status=game_data["game_status"]
+        )
+
+        return new_game

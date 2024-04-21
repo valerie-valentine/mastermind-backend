@@ -9,3 +9,26 @@ class Guess(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey(
         "user.user_id"), nullable=True)
     game = db.relationship("Game", back_populates="guesses")
+
+
+def to_dict(self):
+    guess_dict = dict(
+        guess_id=self.guess_id,
+        guess=self.guess,
+        correct_num=self.guess,
+        correct_loc=self.correct_loc,
+        game_id=self.game_id,
+    )
+
+    return guess_dict
+
+
+def from_dict(cls, guess_data):
+    new_guess = cls(
+        guess=guess_data["guess"],
+        game_id=guess_data["game_id"],
+        correct_num=guess_data["correct_num"],
+        correct_loc=guess_data["correct_loc"]
+    )
+
+    return new_guess
