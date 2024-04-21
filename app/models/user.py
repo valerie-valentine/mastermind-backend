@@ -12,7 +12,7 @@ def to_dict(self):
     user_dict = dict(
         user_id=self.user_id,
         username=self.username,
-        user_games=self.games
+        games=self.games
     )
 
     return user_dict
