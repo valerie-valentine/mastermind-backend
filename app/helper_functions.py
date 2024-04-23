@@ -2,6 +2,7 @@ from flask import abort, make_response
 import requests
 import os
 import requests
+from app.models.user import User
 
 
 def validate_model(cls, model_id):
@@ -20,9 +21,9 @@ def validate_model(cls, model_id):
     return model
 
 
-def random_number(digits):
+def random_number(digits, num_min, num_max):
     url = f'https://www.random.org/integers/?num={
-        digits}&min=0&max=9&col=1&base=10&format=plain&rnd=new'
+        digits}&min={num_min}&max={num_max}&col=1&base=10&format=plain&rnd=new'
 
     response = requests.get(url)
 
@@ -95,7 +96,7 @@ def validate_game_data(request_data):
             abort(make_response(
                 {"details": f"Invalid choice: Please enter a numerical value less than equal to 9 and larger than num_min: {request_data["num_min"]} "}, 400))
     if "difficulty_level" in request_data:
-        if not request_data["difficulty_level"] in [4, 6, 8]:
+        if not request_data["difficulty_level"] in ["easy", "medium", "hard"]:
             abort(make_response(
                 {"details": f"Invalid choice: Please enter a valid level: easy, medium, hard"}, 400))
 
@@ -110,3 +111,27 @@ def generate_hint(game_data):
         return {'hint': f"The answer if greater than your last guess {guess["guess"]}"}
     else:
         return {'hint': f"The answer if less than your last guess {guess["guess"]}"}
+
+
+def validate_user_login(username, password):
+    user = User.query.filter_by(username=username, password=password).first()
+
+    if not user:
+        abort(make_response({'message': f'User: {
+              username} not found. Please check your login credentials'}, 404))
+
+    return user
+
+
+def validate_user(user_data):
+    if "username" not in user_data or "password" not in user_data:
+        abort(make_response(
+            {'details': f'Failed to create user. Please check your input data'}, 400))
+
+    existing_user = User.query.filter_by(
+        username=user_data['username']).first()
+
+    if existing_user:
+        abort(make_response({'details': f'Username ({
+              user_data["username"]}) already exists. Please choose another username.'}, 400))
+    return user_data

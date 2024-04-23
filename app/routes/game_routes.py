@@ -12,7 +12,12 @@ games_bp = Blueprint("games", __name__, url_prefix="/games")
 def create_game():
     request_body = request.get_json()
     game_data = validate_game_data(request_body)
-    generated_answer = random_number(game_data["difficulty_level"])
+    generated_answer = random_number(
+        game_data["difficulty_level"], request_body["num_min"], request_body["num_max"])
+
+    if 'user_id' in request_body:
+        user = validate_model(User, request_body['user_id'])
+        game.user = user
 
     try:
         game = Game.from_dict(game_data)
@@ -62,7 +67,8 @@ def add_guess_to_game(game_id):
         guess = Guess.from_dict(request_body)
         guess.correct_num = correct_num
         guess.correct_loc = correct_loc
-        guess.game_id = game.game_id
+        # guess.game_id = game.game_id
+        guess.game = game
         db.session.add(guess)
         db.session.commit()
 
@@ -72,7 +78,6 @@ def add_guess_to_game(game_id):
         abort(make_response({"details": "Invalid data"}), 400)
 
 
-# ask liz about game.guesses
 @games_bp.route("/<game_id>/guesses", methods=["GET"])
 def get_all_guesses(game_id):
     game = validate_model(Game, game_id)
@@ -87,27 +92,3 @@ def get_hint(game_id):
     hint = generate_hint(game)
 
     return jsonify(hint), 200
-
-
-# @games_bp.route("/<game_id>/lives", methods=["PATCH"])
-# def update_lives(game_id):
-#     game = validate_model(Game, game_id)
-#     game.lives -= 1
-#     db.session.commit()
-
-#     return make_response({"game": game.to_dict()}, 200)
-
-
-# @games_bp.route("/<game_id>/game_status", methods=["PATCH"])
-# def update_game_status(game_id):
-#     game = validate_model(Game, game_id)
-#     request_body = request.get_json()
-
-#     try:
-#         game.game_status = request_body["game_status"]
-#         db.session.commit()
-
-#         return make_response({"game": game.to_dict()}, 200)
-
-#     except KeyError:
-#         abort(make_response({"details": "Invalid data"}, 400))
