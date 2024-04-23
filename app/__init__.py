@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
 import os
 from dotenv import load_dotenv
 # from flask_cors import CORS
@@ -8,6 +9,7 @@ from dotenv import load_dotenv
 db = SQLAlchemy()
 migrate = Migrate()
 load_dotenv()
+bcrypt = Bcrypt()
 
 
 def create_app(test_config=None):
@@ -22,8 +24,10 @@ def create_app(test_config=None):
     from app.models.guess import Guess
     from app.models.user import User
 
+    # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
+    bcrypt.init_app(app)
 
     # Register Blueprints here
     from .routes.game_routes import games_bp

@@ -123,15 +123,34 @@ def validate_user_login(username, password):
     return user
 
 
-def validate_user(user_data):
-    if "username" not in user_data or "password" not in user_data:
-        abort(make_response(
-            {'details': f'Failed to create user. Please check your input data'}, 400))
+# def validate_user(user_data):
+#     if "username" not in user_data or "password" not in user_data:
+#         abort(make_response(
+#             {'details': f'Failed to create user. Please check your input data'}, 400))
 
-    existing_user = User.query.filter_by(
-        username=user_data['username']).first()
+#     existing_user = User.query.filter_by(
+#         username=user_data['username']).first()
+
+#     if existing_user:
+#         abort(make_response({'details': f'Username ({
+#               user_data["username"]}) already exists. Please choose another username.'}, 400))
+#     return user_data
+
+def validate_user(user_data):
+    username = user_data.get("username")
+    password = user_data.get("password")
+
+    if not username or not password:
+        abort(make_response(
+            {'details': 'Failed to create user. Username and password are required.'}, 400))
+    if not isinstance(username, str) or not isinstance(password, str):
+        abort(make_response(
+            {'details': 'Failed to create user. Invalid datatype for username or password'}, 400))
+
+    existing_user = User.query.filter_by(username=username).first()
 
     if existing_user:
-        abort(make_response({'details': f'Username ({
-              user_data["username"]}) already exists. Please choose another username.'}, 400))
+        abort(make_response({'details': f'Username "{
+              username}" already exists. Please choose another username.'}, 400))
+
     return user_data

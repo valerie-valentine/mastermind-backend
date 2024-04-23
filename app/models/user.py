@@ -11,6 +11,7 @@ class User(db.Model):
         user_dict = dict(
             user_id=self.user_id,
             username=self.username,
+            password=self.password,
             games=[game.to_dict() for game in self.games]
         )
 

@@ -1,6 +1,5 @@
-from app import db
+from app import db, bcrypt
 from app.models.user import User
-# from app.models.user import Game
 from flask import Blueprint, jsonify, make_response, abort, request
 from app.helper_functions import *
 
@@ -12,9 +11,11 @@ users_bp = Blueprint("users", __name__, url_prefix="/users")
 def create_user():
     request_body = request.get_json()
     user_data = validate_user(request_body)
+    hashed_password = bcrypt.generate_password_hash(user_data["password"])
 
     try:
         user = User.from_dict(user_data)
+        user.password = hashed_password
         db.session.add(user)
         db.session.commit()
 
@@ -22,7 +23,7 @@ def create_user():
 
     except KeyError:
         abort(make_response(
-            {'Invalid data. Must include username and password.'}, 400))
+            {'details': f'Failed to create user. Please check your input data'}, 400))
 
 
 @users_bp.route("/<user_id>", methods=["GET"])
