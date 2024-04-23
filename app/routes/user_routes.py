@@ -11,7 +11,8 @@ users_bp = Blueprint("users", __name__, url_prefix="/users")
 def create_user():
     request_body = request.get_json()
     user_data = validate_user(request_body)
-    hashed_password = bcrypt.generate_password_hash(user_data["password"])
+    hashed_password = bcrypt.generate_password_hash(
+        user_data["password"]).decode('utf-8')
 
     try:
         user = User.from_dict(user_data)
@@ -33,13 +34,13 @@ def get_user(user_id):
     return {"user": user.to_dict()}
 
 
-@users_bp.route("/authentication", methods=["GET"])
-def login_user():
+@users_bp.route("/<user_id>/authentication", methods=["GET"])
+def login_user(user_id):
     request_body = request.get_json()
-    user = validate_user_login(
-        request_body["username"], request_body["password"])
+    user = validate_model(User, user_id)
+    validated_user = validate_user_login(user, request_body)
 
-    return {"user": user.to_dict()}
+    return {"user": validated_user.to_dict()}
 
 
 @users_bp.route("/<user_id>/games", methods=["GET"])

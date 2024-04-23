@@ -3,6 +3,7 @@ import requests
 import os
 import requests
 from app.models.user import User
+from app import bcrypt
 
 
 def validate_model(cls, model_id):
@@ -82,7 +83,6 @@ def validate_user_guess(game_data, guess):
 
 
 def validate_game_data(request_data):
-    # Should i have a check to for key 1st or not?
     if "lives" in request_data:
         if not isinstance(request_data["lives"], int) or int(request_data["lives"]) >= 20 or int(request_data["lives"]) < 3:
             abort(make_response(
@@ -96,7 +96,7 @@ def validate_game_data(request_data):
             abort(make_response(
                 {"details": f"Invalid choice: Please enter a numerical value less than equal to 9 and larger than num_min: {request_data["num_min"]} "}, 400))
     if "difficulty_level" in request_data:
-        if not request_data["difficulty_level"] in ["easy", "medium", "hard"]:
+        if not request_data["difficulty_level"] in [4, 6, 8]:
             abort(make_response(
                 {"details": f"Invalid choice: Please enter a valid level: easy, medium, hard"}, 400))
 
@@ -112,29 +112,6 @@ def generate_hint(game_data):
     else:
         return {'hint': f"The answer if less than your last guess {guess["guess"]}"}
 
-
-def validate_user_login(username, password):
-    user = User.query.filter_by(username=username, password=password).first()
-
-    if not user:
-        abort(make_response({'message': f'User: {
-              username} not found. Please check your login credentials'}, 404))
-
-    return user
-
-
-# def validate_user(user_data):
-#     if "username" not in user_data or "password" not in user_data:
-#         abort(make_response(
-#             {'details': f'Failed to create user. Please check your input data'}, 400))
-
-#     existing_user = User.query.filter_by(
-#         username=user_data['username']).first()
-
-#     if existing_user:
-#         abort(make_response({'details': f'Username ({
-#               user_data["username"]}) already exists. Please choose another username.'}, 400))
-#     return user_data
 
 def validate_user(user_data):
     username = user_data.get("username")
@@ -152,5 +129,23 @@ def validate_user(user_data):
     if existing_user:
         abort(make_response({'details': f'Username "{
               username}" already exists. Please choose another username.'}, 400))
+
+    return user_data
+
+
+def validate_user_login(user_data, request_data):
+    username = request_data.get("username")
+    password = request_data.get("password")
+
+    if not username or not password:
+        abort(make_response(
+            {'details': 'Failed login. Username and password are required.'}, 400))
+    if not isinstance(username, str) or not isinstance(password, str):
+        abort(make_response(
+            {'details': 'Falied login. Please enter valid username or password'}, 400))
+
+    if user_data.username != request_data["username"] or not bcrypt.check_password_hash(user_data.password, request_data["password"]):
+        abort(make_response(
+            {'details': 'Failed login: Please check your login credentials'}, 404))
 
     return user_data

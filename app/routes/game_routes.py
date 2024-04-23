@@ -17,11 +17,11 @@ def create_game():
 
     if 'user_id' in request_body:
         user = validate_model(User, request_body['user_id'])
-        game.user = user
 
     try:
         game = Game.from_dict(game_data)
         game.answer = generated_answer
+        game.user = user
         db.session.add(game)
         db.session.commit()
 
