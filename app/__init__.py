@@ -26,6 +26,11 @@ def create_app(test_config=None):
     migrate.init_app(app, db)
 
     # Register Blueprints here
+    from .routes.game_routes import games_bp
+    app.register_blueprint(games_bp)
+
+    from .routes.user_routes import users_bp
+    app.register_blueprint(users_bp)
 
     # CORS(app)
     return app

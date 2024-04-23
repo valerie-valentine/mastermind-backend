@@ -8,7 +8,7 @@ class Game(db.Model):
     answer = db.Column(db.String, nullable=False)
     num_min = db.Column(db.Integer, default=0, nullable=False)
     num_max = db.Column(db.Integer, default=7, nullable=False)
-    game_status = db.Column(db.String, nullable=False, default="In Progress")
+    game_status = db.Column(db.String, default="In Progress")
     guesses = db.relationship("Guess", back_populates="game", lazy=True)
     timestamp = db.Column(db.DateTime, nullable=False,
                           default=db.func.current_timestamp())
@@ -19,14 +19,14 @@ class Game(db.Model):
     def to_dict(self):
         game_dict = dict(
             game_id=self.game_id,
-            lives=self.answer,
+            lives=self.lives,
             difficulty_level=self.difficulty_level,
             answer=self.answer,
             num_min=self.num_min,
             num_max=self.num_max,
             game_status=self.game_status,
-            guesses=self.guesses,
-            time_stamp=self.timestamp)
+            guesses=[guess.to_dict() for guess in self.guesses],
+            timestamp=self.timestamp)
 
         if self.user_id:
             game_dict["user_id"] = self.user_id
@@ -41,7 +41,6 @@ class Game(db.Model):
             difficulty_level=game_data["difficulty_level"],
             num_min=game_data["num_min"],
             num_max=game_data["num_max"],
-            game_status=game_data["game_status"]
         )
 
         return new_game
