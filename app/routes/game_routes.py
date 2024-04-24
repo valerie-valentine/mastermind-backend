@@ -15,13 +15,14 @@ def create_game():
     generated_answer = random_number(
         game_data["difficulty_level"], request_body["num_min"], request_body["num_max"])
 
-    if 'user_id' in request_body:
-        user = validate_model(User, request_body['user_id'])
-
     try:
         game = Game.from_dict(game_data)
         game.answer = generated_answer
-        game.user = user
+
+        if 'user_id' in request_body:
+            user = validate_model(User, request_body['user_id'])
+            game.user = user
+
         db.session.add(game)
         db.session.commit()
 

@@ -61,9 +61,9 @@ def validate_user_guess(game_data, guess):
     if game_data.lives == 0:
         abort(make_response({"details": f"Guess: {
               guess} invalid. Lives have been exceeded. No more guesses allowed."}, 400))
-    if not guess.isnumeric():
+    if not guess.isdigit() or not isinstance(guess, str):
         abort(make_response({"details": f"Guess: {
-              guess} invalid. Guess must be an numerical value"}, 400))
+              guess} invalid. Guess must be an numerical value of type string"}, 400))
     if len(guess) != game_data.difficulty_level:
         abort(make_response({"details": f"Guess: {guess} invalid. Guess must be {
               game_data.difficulty_level} digits long"}, 400))
