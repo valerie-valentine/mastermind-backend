@@ -61,7 +61,7 @@ def validate_user_guess(game_data, guess):
     if game_data.lives == 0:
         abort(make_response({"details": f"Guess: {
               guess} invalid. Lives have been exceeded. No more guesses allowed."}, 400))
-    if not guess.isdigit() or not isinstance(guess, str):
+    if not isinstance(guess, str) or not guess.isdigit():
         abort(make_response({"details": f"Guess: {
               guess} invalid. Guess must be an numerical value of type string"}, 400))
     if len(guess) != game_data.difficulty_level:
@@ -84,7 +84,7 @@ def validate_user_guess(game_data, guess):
 
 def validate_game_data(request_data):
     if "lives" in request_data:
-        if not isinstance(request_data["lives"], int) or int(request_data["lives"]) >= 20 or int(request_data["lives"]) < 3:
+        if not isinstance(request_data["lives"], int) or int(request_data["lives"]) > 20 or int(request_data["lives"]) < 3:
             abort(make_response(
                 {"details": f"Invalid Choice: Please enter a numerical value for lives between 3 and 20"}, 400))
     if "num_min" in request_data:

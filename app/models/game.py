@@ -9,7 +9,8 @@ class Game(db.Model):
     num_min = db.Column(db.Integer, default=0, nullable=False)
     num_max = db.Column(db.Integer, default=7, nullable=False)
     game_status = db.Column(db.String, default="In Progress")
-    guesses = db.relationship("Guess", back_populates="game", lazy=True)
+    guesses = db.relationship(
+        "Guess", back_populates="game", cascade='all, delete-orphan', lazy=True)
     timestamp = db.Column(db.DateTime, nullable=False,
                           default=db.func.current_timestamp())
     user_id = db.Column(db.Integer, db.ForeignKey(
