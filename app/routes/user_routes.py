@@ -34,7 +34,7 @@ def get_user(user_id):
     return {"user": user.to_dict()}
 
 
-@users_bp.route("/<user_id>/authentication", methods=["GET"])
+@users_bp.route("/<user_id>/authentication", methods=["POST"])
 def login_user(user_id):
     request_body = request.get_json()
     user = validate_model(User, user_id)
