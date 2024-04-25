@@ -1,6 +1,7 @@
 from app import db
 from app.models.game import Game
 from app.models.guess import Guess
+from app.models.client import Client
 from flask import Blueprint, jsonify, make_response, abort, request
 from app.helper_functions import *
 
@@ -19,9 +20,9 @@ def create_game():
         game = Game.from_dict(game_data)
         game.answer = generated_answer
 
-        if 'user_id' in request_body:
-            user = validate_model(User, request_body['user_id'])
-            game.user = user
+        if 'client_id' in request_body:
+            client = validate_model(Client, request_body['client_id'])
+            game.client = client
 
         db.session.add(game)
         db.session.commit()
@@ -61,19 +62,21 @@ def delete_game(game_id):
 def add_guess_to_game(game_id):
     game = validate_model(Game, game_id)
     request_body = request.get_json()
-    guess_data = validate_user_guess(game, request_body["guess"])
-    correct_num, correct_loc = check_user_guess(game, guess_data)
+    guess_data = validate_client_guess(game, request_body["guess"])
+    client_id = request_body.get("client_id")
+    if client_id:
+        client = validate_model(Client, client)
+    correct_num, correct_loc = check_client_guess(game, guess_data, client)
 
     try:
         guess = Guess.from_dict(request_body)
         guess.correct_num = correct_num
         guess.correct_loc = correct_loc
-        # guess.game_id = game.game_id
         guess.game = game
         db.session.add(guess)
         db.session.commit()
 
-        return make_response({"guess": guess.to_dict()}, 201)
+        return make_response({"game": game.to_dict()}, 201)
 
     except KeyError:
         abort(make_response({"details": "Invalid data"}), 400)

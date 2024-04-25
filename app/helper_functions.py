@@ -2,7 +2,7 @@ from flask import abort, make_response
 import requests
 import os
 import requests
-from app.models.user import User
+from app.models.client import Client
 from app import bcrypt
 
 
@@ -32,7 +32,7 @@ def random_number(digits, num_min, num_max):
     return random_number
 
 
-def check_user_guess(game_data, guess):
+def check_client_guess(game_data, guess, client):
     correct_number = 0
     correct_location = 0
     answer_count = {}
@@ -49,6 +49,9 @@ def check_user_guess(game_data, guess):
 
     if guess == game_data.answer:
         game_data.game_status = "Win"
+        print(client)
+        if client:
+            client.score += 1
     else:
         game_data.lives -= 1
         if game_data.lives == 0:
@@ -57,7 +60,7 @@ def check_user_guess(game_data, guess):
     return correct_number, correct_location
 
 
-def validate_user_guess(game_data, guess):
+def validate_client_guess(game_data, guess):
     if game_data.lives == 0:
         abort(make_response({"details": f"Guess: {
               guess} invalid. Lives have been exceeded. No more guesses allowed."}, 400))
@@ -77,7 +80,7 @@ def validate_user_guess(game_data, guess):
     for saved_guess in game_data.guesses:
         if guess == saved_guess.guess:
             abort(make_response({"details": f"Guess: {
-                guess} invalid. Guess has been played previously"}, 400))
+                guess} invalid. Guess has been played previously"}, 40))
 
     return guess
 
@@ -113,39 +116,40 @@ def generate_hint(game_data):
         return {'hint': f"The answer if less than your last guess {guess["guess"]}"}
 
 
-def validate_user(user_data):
-    username = user_data.get("username")
-    password = user_data.get("password")
+def validate_client(client_data):
+    email = client_data.get("email")
+    password = client_data.get("password")
 
-    if not username or not password:
+    if not email or not password:
         abort(make_response(
-            {'details': 'Failed to create user. Username and password are required.'}, 400))
-    if not isinstance(username, str) or not isinstance(password, str):
+            {'details': 'Failed to create.client. Email and password are required.'}, 400))
+    if not isinstance(email, str) or not isinstance(password, str):
         abort(make_response(
-            {'details': 'Failed to create user. Invalid datatype for username or password'}, 400))
+            {'details': 'Failed to create.client. Invalid datatype for email or password'}, 400))
 
-    existing_user = User.query.filter_by(username=username).first()
+    existing_client = Client.query.filter_by(email=email).first()
 
-    if existing_user:
-        abort(make_response({'details': f'Username "{
-              username}" already exists. Please choose another username.'}, 400))
+    if existing_client:
+        abort(make_response({'details': f'Email "{
+              email}" already exists. Please choose another email.'}, 400))
 
-    return user_data
+    return client_data
 
 
-def validate_user_login(user_data, request_data):
-    username = request_data.get("username")
+def validate_client_login(request_data):
+    email = request_data.get("email")
     password = request_data.get("password")
 
-    if not username or not password:
+    if not email or not password:
         abort(make_response(
-            {'details': 'Failed login. Username and password are required.'}, 400))
-    if not isinstance(username, str) or not isinstance(password, str):
+            {'details': 'Failed login. Email and password are required.'}, 400))
+    if not isinstance(email, str) or not isinstance(password, str):
         abort(make_response(
-            {'details': 'Falied login. Please enter valid username or password'}, 400))
+            {'details': 'Falied login. Please enter valid email or password'}, 400))
 
-    if user_data.username != request_data["username"] or not bcrypt.check_password_hash(user_data.password, request_data["password"]):
+    client = Client.query.filter_by(email=email).first()
+    if not client or not bcrypt.check_password_hash(client.password, password):
         abort(make_response(
             {'details': 'Failed login: Please check your login credentials'}, 404))
 
-    return user_data
+    return client

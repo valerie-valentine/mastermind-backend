@@ -13,9 +13,9 @@ class Game(db.Model):
         "Guess", back_populates="game", cascade='all, delete-orphan', lazy=True)
     timestamp = db.Column(db.DateTime, nullable=False,
                           default=db.func.current_timestamp())
-    user_id = db.Column(db.Integer, db.ForeignKey(
-        "user.user_id"), nullable=True)
-    user = db.relationship("User", back_populates="games")
+    client_id = db.Column(db.Integer, db.ForeignKey(
+        "client.client_id"), nullable=True)
+    client = db.relationship("Client", back_populates="games")
 
     def to_dict(self):
         game_dict = dict(
@@ -24,23 +24,24 @@ class Game(db.Model):
             difficulty_level=self.difficulty_level,
             num_min=self.num_min,
             num_max=self.num_max,
+            answer=self.answer,
             game_status=self.game_status,
             guesses=[guess.to_dict() for guess in self.guesses],
             timestamp=self.timestamp)
 
-        if self.user_id:
-            game_dict["user_id"] = self.user_id
+        if self.client_id:
+            game_dict["client_id"] = self.client_id
 
         return game_dict
 
     @classmethod
     def from_dict(cls, game_data):
         new_game = cls(
-            user_id=game_data.get("user_id"),
+            client_id=game_data.get("client_id"),
             lives=game_data["lives"],
             difficulty_level=game_data["difficulty_level"],
             num_min=game_data["num_min"],
-            num_max=game_data["num_max"],
+            num_max=game_data["num_max"]
         )
 
         return new_game
