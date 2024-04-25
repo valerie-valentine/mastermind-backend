@@ -1,62 +1,50 @@
-# import pytest
-# from app import create_app, db
-# from app.models.game import Game
-# from app.models.guess import Guess
-# # from app.models.person import User
+import pytest
+from app import create_app, db
+from app.models.game import Game
+from app.models.client import Client
+from app.models.guess import Guess
 
 
-# @pytest.fixture
-# def app():
-#     # create the app with a test config dictionary
-#     app = create_app({"TESTING": True})
+@pytest.fixture
+def app():
+    app = create_app()
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
-#     with app.app_context():
-#         db.create_all()
-#         yield app
+    with app.app_context():
+        db.create_all()
+        yield app
 
-#     # close and remove the temporary database
-#     with app.app_context():
-#         db.drop_all()
-
-
-# @pytest.fixture
-# def client(app):
-#     return app.test_client()
+        db.session.remove()
+        db.drop_all()
 
 
-# @pytest.fixture
-# def one_guess(app):
-#     with app.app_context():
-#         game = Game(lives=10, difficulty_level=4,
-#                     num_min=0, num_max=1, answer="1234")
-#         guess = Guess(guess="1234")
-#         game.guesses.append(guess)
-#         db.session.add(game)
-#         db.session.commit()
-#         return guess
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
 
-# @pytest.fixture
-# def one_game(app):
-#     with app.app_context():
-#         game = Game(lives=10, difficulty_level=4,
-#                     num_min=0, num_max=1, answer="1234")
-#         db.session.add(game)
-#         db.session.commit()
-#         return game
+@pytest.fixture
+def new_game():
+    return {
+        "difficulty_level": 4,
+        "num_min": 0,
+        "num_max": 7,
+        "lives": 10
+    }
 
 
-# @pytest.fixture
-# def one_user_with_game(app):
-#     with app.app_context():
-#         user = User(username="test_user", password="password")
-#         game = Game(lives=10, difficulty_level=4,
-#                     num_min=0, num_max=1, answer="1234")
-#         user.games.append(game)
-#         db.session.add(user)
-#         db.session.commit()
-#         return user
+@pytest.fixture
+def new_client():
+    return Client(name="Test Client")
 
 
-# if __name__ == "__main__":
-#     pytest.main()
+@pytest.fixture
+def new_guess():
+    return {"guess": 1111}
+
+
+@pytest.fixture
+def new_game_with_client(new_game, new_client):
+    new_game["client_id"] = new_client.id
+    return new_game

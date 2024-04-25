@@ -28,6 +28,7 @@ def random_number(digits, num_min, num_max):
 
     response = requests.get(url)
 
+    # result digits are new line separated, join them to get a single string
     random_number = "".join(response.text.split())
     return random_number
 
