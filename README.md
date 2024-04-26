@@ -1,6 +1,19 @@
-# Mastermind
+# Mastermind Backend Server
 
-Flask backend server for the Mastermind game to handle code generation and verify guesses. 
+The backend system for Mastermind, a code breaking game. It provides a RESTful API for creating, reading, updating, and deleting (CRUD) resources required to play the game. Built with React, Flask, and PostgreSQL. The backend server is being utilized to support the Mastermind site.
+
+## Getting Started
+
+### Prerequisites
+
+- flask
+- flask-sqlalchemy
+- flask-migrate
+- flask-bcrypt
+- flask-cors
+- python-dotenv
+- psycopg2-binary
+- pytest
 
 ## Running the Flask Server Locally
 
@@ -8,29 +21,8 @@ Flask backend server for the Mastermind game to handle code generation and verif
 
 Navigate to the project directory (`cd mastermind`):
 
+#### Create a virtual environment
+
 ```bash
-## create a virtual environment
 python3 -m venv venv
-
-## activate virtual environment
-source venv/bin/activate 
-
-## install packages
-pip install -r requirements.txt
-
-## when deactivating virtual environment: 
-deactivate
-
-## Create Databases
-
-PostgreSQL was used for the database in this project.
-
-```bash
-createdb mastermind
-
-Create a .env file to connect to the database. In the mastermind folder, enter the following:
-SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://postgres:postgres@localhost:5432/mastermind
-
-Depending on what port is used, 5432 may be a different number.
-If you name the database something other than mastermind, then mastermind should be changed to the database name!
 
