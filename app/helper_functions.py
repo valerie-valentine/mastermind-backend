@@ -112,9 +112,9 @@ def generate_hint(game_data):
     answer = game_data.answer
 
     if int((guess["guess"])) < int(answer):
-        return {'hint': f"The answer if greater than your last guess {guess["guess"]}"}
+        return {'hint': f"The answer is greater than your last guess {guess["guess"]}"}
     else:
-        return {'hint': f"The answer if less than your last guess {guess["guess"]}"}
+        return {'hint': f"The answer is less than your last guess {guess["guess"]}"}
 
 
 def validate_client(client_data):
