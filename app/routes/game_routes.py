@@ -63,6 +63,7 @@ def add_guess_to_game(game_id):
     game = validate_model(Game, game_id)
     request_body = request.get_json()
     guess_data = validate_client_guess(game, request_body["guess"])
+    client = None
     client_id = request_body.get("client_id")
     if client_id:
         client = validate_model(Client, client)

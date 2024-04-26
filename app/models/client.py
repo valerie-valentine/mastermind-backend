@@ -3,10 +3,10 @@ from app import db
 
 class Client(db.Model):
     client_id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, nullable=False)
-    password = db.Column(db.String, nullable=False)
-    username = db.Column(db.String, nullable=False)
-    score = db.Column(db.Integer, default=0, nullable=False)
+    email = db.Column(db.String)
+    password = db.Column(db.String)
+    username = db.Column(db.String)
+    score = db.Column(db.Integer, default=0)
     games = db.relationship("Game", back_populates="client",
                             cascade='all, delete-orphan', lazy=True)
 

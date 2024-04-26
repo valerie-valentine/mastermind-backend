@@ -3,11 +3,11 @@ from app import db
 
 class Game(db.Model):
     game_id = db.Column(db.Integer, primary_key=True)
-    lives = db.Column(db.Integer, default=10, nullable=False)
-    difficulty_level = db.Column(db.Integer, nullable=False, default=4)
-    answer = db.Column(db.String, nullable=False)
-    num_min = db.Column(db.Integer, default=0, nullable=False)
-    num_max = db.Column(db.Integer, default=7, nullable=False)
+    lives = db.Column(db.Integer, default=10)
+    difficulty_level = db.Column(db.Integer, default=4)
+    answer = db.Column(db.String)
+    num_min = db.Column(db.Integer, default=0)
+    num_max = db.Column(db.Integer, default=7)
     game_status = db.Column(db.String, default="In Progress")
     guesses = db.relationship(
         "Guess", back_populates="game", cascade='all, delete-orphan', lazy=True)

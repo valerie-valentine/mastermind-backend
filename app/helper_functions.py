@@ -1,5 +1,4 @@
 from flask import abort, make_response
-import requests
 import os
 import requests
 from app.models.client import Client
