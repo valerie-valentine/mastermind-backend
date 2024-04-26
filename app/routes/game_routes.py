@@ -20,7 +20,7 @@ def create_game():
         game = Game.from_dict(game_data)
         game.answer = generated_answer
 
-        if 'client_id' in request_body:
+        if 'client_id' in request_body and request_body['client_id']:
             client = validate_model(Client, request_body['client_id'])
             game.client = client
 

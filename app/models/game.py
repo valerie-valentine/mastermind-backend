@@ -24,7 +24,6 @@ class Game(db.Model):
             difficulty_level=self.difficulty_level,
             num_min=self.num_min,
             num_max=self.num_max,
-            answer=self.answer,
             game_status=self.game_status,
             guesses=[guess.to_dict() for guess in self.guesses],
             timestamp=self.timestamp)
