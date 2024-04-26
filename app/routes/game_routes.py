@@ -66,7 +66,7 @@ def add_guess_to_game(game_id):
     client = None
     client_id = request_body.get("client_id")
     if client_id:
-        client = validate_model(Client, client)
+        client = validate_model(Client, client_id)
     correct_num, correct_loc = check_client_guess(game, guess_data, client)
 
     try:

@@ -9,7 +9,8 @@ from app.helper_functions import *
 def test_create_client(client):
     data = {
         "username": "testuser",
-        "password": "password123"
+        "password": "password123",
+        "email": "test@gmail.com"
     }
     response = client.post("/clients", json=data)
     assert response.status_code == 201

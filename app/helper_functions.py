@@ -36,7 +36,8 @@ def check_client_guess(game_data, guess, client):
     correct_number = 0
     correct_location = 0
     answer_count = {}
-
+    print("Game data:", game_data)
+    print("Answer:", game_data.answer if game_data else "Game data is None")
     for num in game_data.answer:
         answer_count[num] = answer_count.get(num, 0) + 1
 
