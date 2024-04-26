@@ -81,7 +81,7 @@ def validate_client_guess(game_data, guess):
     for saved_guess in game_data.guesses:
         if guess == saved_guess.guess:
             abort(make_response({"details": f"Guess: {
-                guess} invalid. Guess has been played previously"}, 40))
+                guess} invalid. Guess has been played previously"}, 400))
 
     return guess
 
