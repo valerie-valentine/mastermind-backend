@@ -90,6 +90,7 @@ Additional Features
     Leaderboard that displays the top 10 players based off of most games won
     Ability for a user to delete a game or user account
     Ability to store and retrieve hashed passwords
+    Generate a hint for user
 
 ### Backend Design & Considerations
 
