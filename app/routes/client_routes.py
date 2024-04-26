@@ -64,7 +64,7 @@ def delete_client(client_id):
 @clients_bp.route("/top_players", methods=["GET"])
 def get_winning_client():
     top_clients = Client.query.order_by(
-        Client.score.desc()).all()
-    clients_response = [client.to_dict() for client in top_clients]
+        Client.score.desc()).limit(10).all()
+    clients_response = [client.to_dict_winners() for client in top_clients]
 
     return jsonify(clients_response), 200

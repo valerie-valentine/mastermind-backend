@@ -20,6 +20,14 @@ class Client(db.Model):
 
         return client_dict
 
+    def to_dict_winners(self):
+        client_dict = dict(
+            username=self.username,
+            score=self.score
+        )
+
+        return client_dict
+
     @classmethod
     def from_dict(cls, client_data):
         new_client = cls(
