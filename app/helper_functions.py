@@ -96,7 +96,7 @@ def validate_game_data(request_data):
             abort(make_response(
                 {"details": f"Invalid Choice: Please enter a numerical value for num_min greater than or equal to 0 and less than 9"}, 400))
     if "num_max" in request_data:
-        if not isinstance(request_data["num_max"], int) or int(request_data["num_max"]) >= 9 or int(request_data["num_min"]) >= int(request_data["num_max"]):
+        if not isinstance(request_data["num_max"], int) or int(request_data["num_max"]) >= 10 or int(request_data["num_min"]) >= int(request_data["num_max"]):
             abort(make_response(
                 {"details": f"Invalid choice: Please enter a numerical value less than equal to 9 and larger than num_min: {request_data["num_min"]} "}, 400))
     if "difficulty_level" in request_data:
