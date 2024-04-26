@@ -55,7 +55,7 @@ def delete_game(game_id):
     db.session.delete(game)
     db.session.commit()
 
-    return make_response({"details": f"Game {game_id} deleted successfully"}, 201)
+    return make_response({"details": f"Game {game_id} deleted successfully"}, 204)
 
 
 @games_bp.route("/<game_id>/guesses", methods=["POST"])
