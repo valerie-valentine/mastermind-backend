@@ -22,7 +22,6 @@ class Game(db.Model):
             game_id=self.game_id,
             lives=self.lives,
             difficulty_level=self.difficulty_level,
-            answer=self.answer,
             num_min=self.num_min,
             num_max=self.num_max,
             game_status=self.game_status,
