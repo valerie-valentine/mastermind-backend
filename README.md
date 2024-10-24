@@ -2,6 +2,8 @@
 
 The backend system for Mastermind, a code breaking game. It provides a RESTful API for creating, reading, updating, and deleting (CRUD) resources required to play the game. Built with Flask and PostgreSQL. The backend server is being utilized to support the Mastermind site.
 
+**Console Version of App: [Mastermind Console](https://github.com/valerie-valentine/mastermind_console_script)**
+
 **Check out the Website: [Mastermind](https://valerie-valentine.github.io/mastermin-frontend)**
 
 ## Getting Started
