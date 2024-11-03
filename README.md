@@ -4,7 +4,7 @@ The backend system for Mastermind, a code breaking game. It provides a RESTful A
 
 **Console Version of App: [Mastermind Console](https://github.com/valerie-valentine/mastermind_console_script)**
 
-**Check out the Website: [Mastermind](https://valerie-valentine.github.io/mastermin-frontend)**
+**Check out the Website: [Mastermind](https://valerie-valentine.github.io/mastermind-frontend)**
 
 ## Getting Started
 
