@@ -3,6 +3,9 @@ import os
 import requests
 from app.models.client import Client
 from app import bcrypt
+# from ..db import db
+
+# old way validate_model w/o query building
 
 
 def validate_model(cls, model_id):
@@ -19,6 +22,23 @@ def validate_model(cls, model_id):
             {"details": f"{cls.__name__} {model_id} not found"}, 404))
 
     return model
+
+
+# def validate_model(cls, model_id):
+#     try:
+#         model_id = int(model_id)
+#     except:
+#         response = {"message": f"{cls.__name__} {model_id} invalid"}
+#         abort(make_response(response, 400))
+
+#     query = db.select(cls).where(cls.id == model_id)
+#     model = db.session.scalar(query)
+
+#     if not model:
+#         response = {"message": f"{cls.__name__} {model_id} not found"}
+#         abort(make_response(response, 404))
+
+#     return model
 
 
 def random_number(digits, num_min, num_max):

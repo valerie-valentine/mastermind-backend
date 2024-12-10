@@ -1,4 +1,4 @@
-from app import db
+from ..db import db
 from app.models.game import Game
 from app.models.guess import Guess
 from app.models.client import Client
@@ -6,10 +6,10 @@ from flask import Blueprint, jsonify, make_response, abort, request
 from app.helper_functions import *
 
 
-games_bp = Blueprint("games", __name__, url_prefix="/games")
+bp = Blueprint("games", __name__, url_prefix="/games")
 
 
-@games_bp.route("", methods=["POST"])
+@bp.route("", methods=["POST"])
 def create_game():
     request_body = request.get_json()
     game_data = validate_game_data(request_body)
@@ -33,22 +33,26 @@ def create_game():
         abort(make_response({"details": "Invalid data"}), 400)
 
 
-@games_bp.route("/<game_id>", methods=["GET"])
+@bp.route("/<game_id>", methods=["GET"])
 def get_one_game(game_id):
     game = validate_model(Game, game_id)
 
     return {"game": game.to_dict()}
 
 
-@games_bp.route("", methods=["GET"])
+@bp.route("", methods=["GET"])
 def get_all_games():
-    games = Game.query.all()
+    # games = Game.query.all()
+    # games_response = [game.to_dict() for game in games]
+    query = db.select(Game).order_by(Game.game_id)
+    games = db.session.scalars(query)
     games_response = [game.to_dict() for game in games]
 
-    return jsonify(games_response), 200
+    # return jsonify(games_response), 200
+    return games_response
 
 
-@games_bp.route("/<game_id>", methods=["DELETE"])
+@bp.route("/<game_id>", methods=["DELETE"])
 def delete_game(game_id):
     game = validate_model(Game, game_id)
 
@@ -58,7 +62,7 @@ def delete_game(game_id):
     return make_response({"details": f"Game {game_id} deleted successfully"}, 204)
 
 
-@games_bp.route("/<game_id>/guesses", methods=["POST"])
+@bp.route("/<game_id>/guesses", methods=["POST"])
 def add_guess_to_game(game_id):
     game = validate_model(Game, game_id)
     request_body = request.get_json()
@@ -83,7 +87,7 @@ def add_guess_to_game(game_id):
         abort(make_response({"details": "Invalid data"}), 400)
 
 
-@games_bp.route("/<game_id>/guesses", methods=["GET"])
+@bp.route("/<game_id>/guesses", methods=["GET"])
 def get_all_guesses(game_id):
     game = validate_model(Game, game_id)
     guess_response = [guess.to_dict() for guess in game.guesses]
@@ -91,7 +95,7 @@ def get_all_guesses(game_id):
     return jsonify(guess_response), 200
 
 
-@games_bp.route("/<game_id>/hint", methods=["GET"])
+@bp.route("/<game_id>/hint", methods=["GET"])
 def get_hint(game_id):
     game = validate_model(Game, game_id)
     hint = generate_hint(game)

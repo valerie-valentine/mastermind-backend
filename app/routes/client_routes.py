@@ -1,13 +1,13 @@
-from app import db, bcrypt
 from app.models.client import Client
 from flask import Blueprint, jsonify, make_response, abort, request
 from app.helper_functions import *
+from ..db import db, bcrypt
 
 
-clients_bp = Blueprint("clients", __name__, url_prefix="/clients")
+bp = Blueprint("clients", __name__, url_prefix="/clients")
 
 
-@clients_bp.route("", methods=["POST"])
+@bp.route("", methods=["POST"])
 def create_client():
     request_body = request.get_json()
     client_data = validate_client(request_body)
@@ -27,14 +27,14 @@ def create_client():
             {'details': f'Failed to create client. Please check your input data'}, 400))
 
 
-@clients_bp.route("/<client_id>", methods=["GET"])
+@bp.route("/<client_id>", methods=["GET"])
 def get_client(client_id):
     client = validate_model(Client, client_id)
 
     return {"client": client.to_dict()}
 
 
-@clients_bp.route("/authentication", methods=["POST"])
+@bp.route("/authentication", methods=["POST"])
 def login_client():
     request_body = request.get_json()
     validated_client = validate_client_login(request_body)
@@ -43,7 +43,7 @@ def login_client():
     return {"client": validated_client.to_dict()}, 200
 
 
-@clients_bp.route("/<client_id>/games", methods=["GET"])
+@bp.route("/<client_id>/games", methods=["GET"])
 def get_all_client_games(client_id):
     client = validate_model(Client, client_id)
     client_response = [game.to_dict() for game in client.games]
@@ -51,7 +51,7 @@ def get_all_client_games(client_id):
     return jsonify(client_response), 200
 
 
-@clients_bp.route("/<client_id>", methods=["DELETE"])
+@bp.route("/<client_id>", methods=["DELETE"])
 def delete_client(client_id):
     client = validate_model(Client, client_id)
 
@@ -61,7 +61,7 @@ def delete_client(client_id):
     return make_response({"details":  f"Client: {client.client_id} deleted"}, 204)
 
 
-@clients_bp.route("/top_players", methods=["GET"])
+@bp.route("/top_players", methods=["GET"])
 def get_winning_client():
     top_clients = Client.query.order_by(
         Client.score.desc()).limit(10).all()
