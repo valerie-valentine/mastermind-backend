@@ -3,42 +3,56 @@ import os
 import requests
 from app.models.client import Client
 from app import bcrypt
-# from ..db import db
+from .db import db
 
 # old way validate_model w/o query building
-
-
-def validate_model(cls, model_id):
-    try:
-        model_id = int(model_id)
-    except:
-        abort(make_response(
-            {"details": f"{cls.__name__} {model_id} invalid"}, 400))
-
-    model = cls.query.get(model_id)
-
-    if not model:
-        abort(make_response(
-            {"details": f"{cls.__name__} {model_id} not found"}, 404))
-
-    return model
 
 
 # def validate_model(cls, model_id):
 #     try:
 #         model_id = int(model_id)
 #     except:
-#         response = {"message": f"{cls.__name__} {model_id} invalid"}
-#         abort(make_response(response, 400))
+#         abort(make_response(
+#             {"details": f"{cls.__name__} {model_id} invalid"}, 400))
 
-#     query = db.select(cls).where(cls.id == model_id)
-#     model = db.session.scalar(query)
+#     model = cls.query.get(model_id)
 
 #     if not model:
-#         response = {"message": f"{cls.__name__} {model_id} not found"}
-#         abort(make_response(response, 404))
+#         abort(make_response(
+#             {"details": f"{cls.__name__} {model_id} not found"}, 404))
 
 #     return model
+
+
+def validate_model(cls, model_id):
+    try:
+        model_id = int(model_id)
+    except:
+        response = {"message": f"{cls.__name__} {model_id} invalid"}
+        abort(make_response(response, 400))
+
+    query = db.select(cls).where(cls.id == model_id)
+    model = db.session.scalar(query)
+
+    if not model:
+        response = {"message": f"{cls.__name__} {model_id} not found"}
+        abort(make_response(response, 404))
+
+    return model
+
+
+def create_model(cls, model_data):
+    try:
+        new_model = cls.from_dict(model_data)
+
+    except KeyError as error:
+        response = {"message": f"Invalid request: missing {error.args[0]}"}
+        abort(make_response(response, 400))
+
+    db.session.add(new_model)
+    db.session.commit()
+
+    return new_model.to_dict(), 201
 
 
 def random_number(digits, num_min, num_max):
@@ -52,7 +66,33 @@ def random_number(digits, num_min, num_max):
     return random_number
 
 
-def check_client_guess(game_data, guess, client):
+# def check_client_guess(game_data, guess, client):
+#     correct_number = 0
+#     correct_location = 0
+#     answer_count = {}
+
+#     for num in game_data.answer:
+#         answer_count[num] = answer_count.get(num, 0) + 1
+
+#     for i, num in enumerate(guess):
+#         if num == game_data.answer[i]:
+#             correct_location += 1
+#         if num in answer_count and answer_count[num] > 0:
+#             correct_number += 1
+#             answer_count[num] -= 1
+
+    # if guess == game_data.answer:
+    #     game_data.game_status = "Win"
+    #     if client:
+    #         client.score += 1
+    # else:
+    #     game_data.lives -= 1
+    #     if game_data.lives == 0:
+    #         game_data.game_status = "Loss"
+
+#     return correct_number, correct_location
+
+def check_client_guess(game_data, guess_data):
     correct_number = 0
     correct_location = 0
     answer_count = {}
@@ -60,21 +100,21 @@ def check_client_guess(game_data, guess, client):
     for num in game_data.answer:
         answer_count[num] = answer_count.get(num, 0) + 1
 
-    for i, num in enumerate(guess):
+    for i, num in enumerate(guess_data):
         if num == game_data.answer[i]:
             correct_location += 1
         if num in answer_count and answer_count[num] > 0:
             correct_number += 1
             answer_count[num] -= 1
 
-    if guess == game_data.answer:
-        game_data.game_status = "Win"
-        if client:
-            client.score += 1
-    else:
-        game_data.lives -= 1
-        if game_data.lives == 0:
-            game_data.game_status = "Loss"
+    # if guess == game_data.answer:
+    #     game_data.game_status = "Win"
+    #     if client:
+    #         client.score += 1
+    # else:
+    #     game_data.lives -= 1
+    #     if game_data.lives == 0:
+    #         game_data.game_status = "Loss"
 
     return correct_number, correct_location
 
@@ -126,25 +166,27 @@ def validate_game_data(request_data):
 
 
 def generate_hint(game_data):
-    guess = [guess.to_dict() for guess in game_data.guesses][-1]
+    # can probably just do game_data.guesses[-1]
+    # guess = [guess.to_dict() for guess in game_data.guesses][-1]
+    last_guess = game_data.guesses[-1].to_dict()
     answer = game_data.answer
 
-    if int((guess["guess"])) < int(answer):
-        return {'hint': f"The answer is greater than your last guess {guess["guess"]}"}
+    if int((last_guess["guess"])) < int(answer):
+        return {'hint': f"The answer is greater than your last guess {last_guess["guess"]}"}
     else:
-        return {'hint': f"The answer is less than your last guess {guess["guess"]}"}
+        return {'hint': f"The answer is less than your last guess {last_guess["guess"]}"}
 
 
-def validate_client(client_data):
+def validate_client_data(client_data):
     email = client_data.get("email")
     password = client_data.get("password")
 
     if not email or not password:
         abort(make_response(
-            {'details': 'Failed to create.client. Email and password are required.'}, 400))
+            {'details': 'Failed to create client. Email and password are required.'}, 400))
     if not isinstance(email, str) or not isinstance(password, str):
         abort(make_response(
-            {'details': 'Failed to create.client. Invalid datatype for email or password'}, 400))
+            {'details': 'Failed to create client. Invalid datatype for email or password'}, 400))
 
     existing_client = Client.query.filter_by(email=email).first()
 

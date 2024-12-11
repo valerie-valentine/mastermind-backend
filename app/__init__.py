@@ -74,7 +74,7 @@ from flask import Flask
 from .db import db, migrate, bcrypt
 from .models import client, game, guess
 from .routes.client_routes import bp as client_bp
-from .routes.game_routes import bp as game_bp
+from .routes.new_game_routes import bp as game_bp
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS

@@ -35,7 +35,7 @@ def test_delete_game(client, new_client, new_game_with_id):
     assert "details" in response.get_json()
 
 
-def test_add_guess_to_game(client, new_client, new_game_with_id):
+def test_add_guess_to_game(client, new_game_with_id):
     data = {
         "guess": "1234"
     }

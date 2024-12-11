@@ -52,6 +52,7 @@ from sqlalchemy import DateTime, func
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from ..db import db
+from app.helper_functions import random_number
 
 if TYPE_CHECKING:
     from .client import Client
@@ -60,7 +61,7 @@ if TYPE_CHECKING:
 
 class Game(db.Model):
     # change game_id -> id
-    game_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     lives: Mapped[int]
     difficulty_level: Mapped[int]
     answer: Mapped[str]
@@ -72,12 +73,12 @@ class Game(db.Model):
     timestamp: Mapped[datetime] = mapped_column(
         DateTime, default=func.current_timestamp(), nullable=False)
     client_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("client.client_id"))
+        ForeignKey("client.id"))
     client: Mapped[Optional["Client"]] = relationship(back_populates="games")
 
     def to_dict(self):
         game_dict = dict(
-            game_id=self.game_id,
+            id=self.id,
             lives=self.lives,
             difficulty_level=self.difficulty_level,
             answer=self.answer,
@@ -94,12 +95,27 @@ class Game(db.Model):
 
     @classmethod
     def from_dict(cls, game_data):
+        # if client id is in request (player logged in)
+        client_id = game_data.get("client_id")
+
         new_game = cls(
-            client_id=game_data.get("client_id"),
+            client_id=client_id,
             lives=game_data["lives"],
             difficulty_level=game_data["difficulty_level"],
             num_min=game_data["num_min"],
-            num_max=game_data["num_max"]
+            num_max=game_data["num_max"],
+            answer=random_number(
+                game_data["difficulty_level"], game_data["num_min"], game_data["num_max"])
         )
 
         return new_game
+
+    def check_game_over(self, game, guess, client):
+        if guess.guess == game.answer:
+            game.game_status = "Win"
+            if client:
+                client.score += 1
+        else:
+            game.lives -= 1
+            if game.lives == 0:
+                game.game_status = "Loss"
