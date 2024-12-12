@@ -56,7 +56,8 @@ class Client(db.Model):
     password: Mapped[str]
     username: Mapped[str]
     score: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    games: Mapped[list["Game"]] = relationship(back_populates="client")
+    games: Mapped[list["Game"]] = relationship(
+        back_populates="client", cascade="all, delete-orphan")
 
     def to_dict(self):
         client_dict = dict(
@@ -85,7 +86,6 @@ class Client(db.Model):
             username=client_data["username"],
             email=client_data["email"],
             password=hashed_password,
-            score=client_data["score"]
         )
 
         return new_client

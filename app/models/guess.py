@@ -45,7 +45,7 @@ class Guess(db.Model):
     guess: Mapped[str]
     correct_num: Mapped[int]
     correct_loc: Mapped[int]
-    game_id: Mapped[int] = mapped_column(ForeignKey("game.id"))
+    game_id: Mapped[int] = mapped_column(ForeignKey("game.id"), nullable=False)
     game: Mapped["Game"] = relationship(back_populates="guesses")
 
     def to_dict(self):

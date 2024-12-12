@@ -67,7 +67,9 @@ class Game(db.Model):
     answer: Mapped[str]
     num_min: Mapped[int]
     num_max: Mapped[int]
-    guesses: Mapped[list["Guess"]] = relationship(back_populates="game")
+    # need to use cascade="all, deleteorphan" to ensure proper cascade deletion because of foreign key relations & not allowing not null values for game.id in guess
+    guesses: Mapped[list["Guess"]] = relationship(
+        back_populates="game", cascade="all, delete-orphan")
     game_status: Mapped[str] = mapped_column(
         String, default="In Progress", nullable=False)
     timestamp: Mapped[datetime] = mapped_column(
