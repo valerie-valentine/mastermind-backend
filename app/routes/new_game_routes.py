@@ -2,7 +2,7 @@ from ..db import db
 from app.models.game import Game
 from app.models.guess import Guess
 from app.models.client import Client
-from flask import Blueprint, jsonify, make_response, abort, request
+from flask import Blueprint, make_response, abort, request
 from app.helper_functions import *
 
 
@@ -75,25 +75,27 @@ def delete_game(game_id):
 #         abort(make_response({"details": "Invalid data"}), 400)
 
 @bp.route("/<game_id>/guesses", methods=["POST"])
+# DOUBLE CHECK THIS STILL WORKS!! - It does but verify everything again!
 def add_guess_to_game(game_id):
     game = validate_model(Game, game_id)
     request_body = request.get_json()
-    guess_data = validate_client_guess(game, request_body["guess"])
+    guess_data = validate_guess_data(game, request_body["guess"])
     # Have to set client to None if no clientid is provided otherwise run into error when check_game_over is called
     client_id = request_body.get("client_id")
     client = validate_model(Client, client_id) if client_id else None
 
     try:
         guess = Guess.from_dict(game, guess_data)
-        game.check_game_over(game, guess, client)
+        game.check_game_over(guess, client)
         guess.game = game
-        db.session.add(guess)
-        db.session.commit()
-
-        return make_response({"game": game.to_dict()}, 201)
 
     except KeyError:
         abort(make_response({"details": "Invalid data"}), 400)
+
+    db.session.add(guess)
+    db.session.commit()
+
+    return make_response({"game": game.to_dict()}, 201)
 
 
 @bp.route("/<game_id>/guesses", methods=["GET"])

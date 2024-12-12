@@ -110,12 +110,12 @@ class Game(db.Model):
 
         return new_game
 
-    def check_game_over(self, game, guess, client):
-        if guess.guess == game.answer:
-            game.game_status = "Win"
+    def check_game_over(self, guess, client):
+        if guess.guess == self.answer:
+            self.game_status = "Win"
             if client:
                 client.score += 1
         else:
-            game.lives -= 1
-            if game.lives == 0:
-                game.game_status = "Loss"
+            self.lives -= 1
+            if self.lives == 0:
+                self.game_status = "Loss"

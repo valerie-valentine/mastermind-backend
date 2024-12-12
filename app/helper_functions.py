@@ -119,7 +119,7 @@ def check_client_guess(game_data, guess_data):
     return correct_number, correct_location
 
 
-def validate_client_guess(game_data, guess):
+def validate_guess_data(game_data, guess):
     if game_data.lives == 0:
         abort(make_response({"details": f"Guess: {
               guess} invalid. Lives have been exceeded. No more guesses allowed."}, 400))
