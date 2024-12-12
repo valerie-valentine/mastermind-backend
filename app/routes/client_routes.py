@@ -48,14 +48,6 @@ def delete_client(client_id):
     return make_response({"details":  f"Client: {client.id} deleted"}, 204)
 
 
-# @bp.route("/top_players", methods=["GET"])
-# def get_winning_client():
-#     top_clients = Client.query.order_by(
-#         Client.score.desc()).limit(10).all()
-#     clients_response = [client.to_dict_winners() for client in top_clients]
-
-#     return clients_response
-
 @bp.route("/top_players", methods=["GET"])
 def get_winning_client():
     query = db.select(Client).order_by(Client.score.desc()).limit(10)
