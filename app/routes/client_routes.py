@@ -8,8 +8,6 @@ from ..db import db
 
 bp = Blueprint("clients", __name__, url_prefix="/clients")
 
-# MAKE MY CREATE ROUTES CONSISTENT  WITH ALL MY OTHER ROUTES!!!
-
 
 @bp.route("", methods=["POST"])
 def create_client():

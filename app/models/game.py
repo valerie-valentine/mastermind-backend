@@ -13,7 +13,6 @@ if TYPE_CHECKING:
 
 
 class Game(db.Model):
-    # change game_id -> id
     game_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     lives: Mapped[int]
     difficulty_level: Mapped[int]
@@ -48,23 +47,6 @@ class Game(db.Model):
 
         return game_dict
 
-    @classmethod
-    def from_dict(cls, game_data):
-        # if client id is in request (player logged in)
-        client_id = game_data.get("client_id")
-
-        new_game = cls(
-            client_id=client_id,
-            lives=game_data["lives"],
-            difficulty_level=game_data["difficulty_level"],
-            num_min=game_data["num_min"],
-            num_max=game_data["num_max"],
-            answer=random_number(
-                game_data["difficulty_level"], game_data["num_min"], game_data["num_max"])
-        )
-
-        return new_game
-
     def check_game_over(self, guess, client):
         if guess.guess == self.answer:
             self.game_status = "Win"
@@ -85,3 +67,20 @@ class Game(db.Model):
             return {'hint': f"The answer is greater than your last guess {last_guess["guess"]}"}
         else:
             return {'hint': f"The answer is less than your last guess {last_guess["guess"]}"}
+
+    @classmethod
+    def from_dict(cls, game_data):
+        # if client id is in request (player logged in)
+        client_id = game_data.get("client_id")
+
+        new_game = cls(
+            client_id=client_id,
+            lives=game_data["lives"],
+            difficulty_level=game_data["difficulty_level"],
+            num_min=game_data["num_min"],
+            num_max=game_data["num_max"],
+            answer=random_number(
+                game_data["difficulty_level"], game_data["num_min"], game_data["num_max"])
+        )
+
+        return new_game

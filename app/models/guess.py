@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 from typing import Optional, TYPE_CHECKING
-from app.helper_functions import *
 from ..db import db
 
 if TYPE_CHECKING:
@@ -26,15 +25,7 @@ class Guess(db.Model):
             game_id=self.game_id,
         )
 
-        print(guess_dict)
-
         return guess_dict
-
-    @classmethod
-    def from_dict(cls, guess_data):
-        new_guess = cls(guess=guess_data)
-
-        return new_guess
 
     def check_client_guess(self, game_data):
         correct_number = 0
@@ -53,3 +44,9 @@ class Guess(db.Model):
 
         self.correct_num = correct_number
         self.correct_loc = correct_location
+
+    @classmethod
+    def from_dict(cls, guess_data):
+        new_guess = cls(guess=guess_data)
+
+        return new_guess

@@ -49,7 +49,6 @@ def delete_game(game_id):
 
 
 @bp.route("/<game_id>/guesses", methods=["POST"])
-# DOUBLE CHECK THIS STILL WORKS!! - It does but verify everything again!
 def add_guess_to_game(game_id):
     game = validate_model_by_id(Game, game_id)
     request_body = request.get_json()
