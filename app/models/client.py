@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class Client(db.Model):
     # changed client_id to id
-    id: Mapped[int] = mapped_column(
+    client_id: Mapped[int] = mapped_column(
         primary_key=True, autoincrement=True)
     email: Mapped[str]
     password: Mapped[str]
@@ -21,7 +21,7 @@ class Client(db.Model):
 
     def to_dict(self):
         client_dict = dict(
-            id=self.id,
+            client_id=self.client_id,
             username=self.username,
             games=[game.to_dict() for game in self.games],
             score=self.score

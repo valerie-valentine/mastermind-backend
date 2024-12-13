@@ -16,7 +16,7 @@ def create_game():
 
     if 'client_id' in request_body and request_body['client_id']:
         client = validate_model(Client, request_body['client_id'])
-        game_data["client_id"] = client.id
+        game_data["client_id"] = client.client_id
     return create_model(Game, game_data)
 
 
@@ -24,20 +24,17 @@ def create_game():
 def get_one_game(game_id):
     game = validate_model(Game, game_id)
 
-    return {"game": game.to_dict()}
+    return {"game": game.to_dict()}, 200
 
 
 @bp.route("", methods=["GET"])
 def get_all_games():
-    # games = Game.query.all()
-    # games_response = [game.to_dict() for game in games]
-    query = db.select(Game).order_by(Game.id)
+    query = db.select(Game).order_by(Game.game_id)
     games = db.session.scalars(query)
     games_response = [game.to_dict() for game in games]
 
     # new version of flask doesn't require jsonify lists
-    # return jsonify(games_response), 200
-    return games_response
+    return games_response, 200
 
 
 @bp.route("/<game_id>", methods=["DELETE"])
@@ -61,7 +58,8 @@ def add_guess_to_game(game_id):
     client = validate_model(Client, client_id) if client_id else None
 
     try:
-        guess = Guess.from_dict(game, guess_data)
+        guess = Guess.from_dict(guess_data)
+        guess.check_client_guess(game)
         game.check_game_over(guess, client)
         guess.game = game
 
@@ -79,8 +77,7 @@ def get_all_guesses(game_id):
     game = validate_model(Game, game_id)
     guess_response = [guess.to_dict() for guess in game.guesses]
 
-    # return jsonify(guess_response), 200
-    return guess_response
+    return guess_response, 200
 
 
 @bp.route("/<game_id>/hint", methods=["GET"])
@@ -88,5 +85,4 @@ def get_hint(game_id):
     game = validate_model(Game, game_id)
     hint = generate_hint(game)
 
-    # maybe just return hint? Check if still gives status 200
-    return hint
+    return hint, 200

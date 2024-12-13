@@ -1,9 +1,10 @@
 from flask import abort, make_response
-import os
-import requests
+from sqlalchemy.inspection import inspect
 from app.models.client import Client
 from app import bcrypt
 from .db import db
+import os
+import requests
 
 # old way validate_model w/o query building
 
@@ -31,8 +32,14 @@ def validate_model(cls, model_id):
         response = {"message": f"{cls.__name__} {model_id} invalid"}
         abort(make_response(response, 400))
 
-    query = db.select(cls).where(cls.id == model_id)
+    # Dynamically find the primary key column for the model
+    primary_key_column = inspect(cls).primary_key[0].name
+
+    query = db.select(cls).where(getattr(cls, primary_key_column) == model_id)
     model = db.session.scalar(query)
+
+    # query = db.select(cls).where(cls.id == model_id)
+    # model = db.session.scalar(query)
 
     if not model:
         response = {"message": f"{cls.__name__} {model_id} not found"}
@@ -52,7 +59,7 @@ def create_model(cls, model_data):
     db.session.add(new_model)
     db.session.commit()
 
-    return new_model.to_dict(), 201
+    return {f"{cls.__name__}".lower(): new_model.to_dict()}, 201
 
 
 def random_number(digits, num_min, num_max):
@@ -91,33 +98,6 @@ def random_number(digits, num_min, num_max):
     #         game_data.game_status = "Loss"
 
 #     return correct_number, correct_location
-
-def check_client_guess(game_data, guess_data):
-    correct_number = 0
-    correct_location = 0
-    answer_count = {}
-
-    for num in game_data.answer:
-        answer_count[num] = answer_count.get(num, 0) + 1
-
-    for i, num in enumerate(guess_data):
-        if num == game_data.answer[i]:
-            correct_location += 1
-        if num in answer_count and answer_count[num] > 0:
-            correct_number += 1
-            answer_count[num] -= 1
-
-    # if guess == game_data.answer:
-    #     game_data.game_status = "Win"
-    #     if client:
-    #         client.score += 1
-    # else:
-    #     game_data.lives -= 1
-    #     if game_data.lives == 0:
-    #         game_data.game_status = "Loss"
-
-    return correct_number, correct_location
-
 
 def validate_guess_data(game_data, guess):
     if game_data.lives == 0:

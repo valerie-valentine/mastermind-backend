@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class Game(db.Model):
     # change game_id -> id
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    game_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     lives: Mapped[int]
     difficulty_level: Mapped[int]
     answer: Mapped[str]
@@ -27,12 +27,12 @@ class Game(db.Model):
     timestamp: Mapped[datetime] = mapped_column(
         DateTime, default=func.current_timestamp(), nullable=False)
     client_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("client.id"))
+        ForeignKey("client.client_id"), nullable=True)
     client: Mapped[Optional["Client"]] = relationship(back_populates="games")
 
     def to_dict(self):
         game_dict = dict(
-            id=self.id,
+            game_id=self.game_id,
             lives=self.lives,
             difficulty_level=self.difficulty_level,
             answer=self.answer,

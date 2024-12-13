@@ -2,10 +2,12 @@ from app.models.client import Client
 from app.models.game import Game
 from flask import Blueprint, make_response, abort, request
 from app.helper_functions import *
-from ..db import db, bcrypt
+from ..db import db
 
 
 bp = Blueprint("clients", __name__, url_prefix="/clients")
+
+# MAKE MY CREATE ROUTES CONSISTENT  WITH ALL MY OTHER ROUTES!!!
 
 
 @bp.route("", methods=["POST"])
@@ -19,7 +21,7 @@ def create_client():
 def get_client(client_id):
     client = validate_model(Client, client_id)
 
-    return {"client": client.to_dict()}
+    return {"client": client.to_dict()}, 200
 
 
 @bp.route("/authentication", methods=["POST"])
@@ -35,7 +37,7 @@ def get_all_client_games(client_id):
     client = validate_model(Client, client_id)
     client_response = [game.to_dict() for game in client.games]
 
-    return client_response
+    return client_response, 200
 
 
 @bp.route("/<client_id>", methods=["DELETE"])
@@ -45,7 +47,7 @@ def delete_client(client_id):
     db.session.delete(client)
     db.session.commit()
 
-    return make_response({"details":  f"Client: {client.id} deleted"}, 204)
+    return make_response({"details":  f"Client: {client.client_id} deleted"}, 204)
 
 
 @bp.route("/top_players", methods=["GET"])
@@ -54,7 +56,7 @@ def get_winning_client():
     top_players = db.session.scalars(query)
     clients_response = [client.to_dict_winners() for client in top_players]
 
-    return clients_response
+    return clients_response, 200
 
 # IDEALLY WANT TO USE THIS BUT WOULD HAVE TO REFACTOR HOW TO GAMES ARE CREATED ON FE
 # @bp.route("/<client_id>/games", methods=["POST"])
@@ -63,5 +65,5 @@ def get_winning_client():
 
 #     request_body = request.get_json()
 #     game_data = validate_game_data(request_body)
-#     game_data["client_id"] = client.id
+#     game_data["client_id"] = client.client_id
 #     return create_model(Game, game_data)
