@@ -9,7 +9,6 @@ if TYPE_CHECKING:
 
 
 class Guess(db.Model):
-    # changed guess_id -> id
     guess_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     guess: Mapped[str]
     correct_num: Mapped[Optional[int]] = mapped_column(nullable=True)

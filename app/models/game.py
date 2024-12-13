@@ -1,10 +1,11 @@
+from app.helpers.random_utils import random_number
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String
 from sqlalchemy import DateTime, func
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from ..db import db
-from app.helper_functions import random_number
+
 
 if TYPE_CHECKING:
     from .client import Client
@@ -73,3 +74,14 @@ class Game(db.Model):
             self.lives -= 1
             if self.lives == 0:
                 self.game_status = "Loss"
+
+    def generate_hint(self):
+        # can probably just do game_data.guesses[-1]
+        # guess = [guess.to_dict() for guess in game_data.guesses][-1]
+        last_guess = self.guesses[-1].to_dict()
+        answer = self.answer
+
+        if int((last_guess["guess"])) < int(answer):
+            return {'hint': f"The answer is greater than your last guess {last_guess["guess"]}"}
+        else:
+            return {'hint': f"The answer is less than your last guess {last_guess["guess"]}"}

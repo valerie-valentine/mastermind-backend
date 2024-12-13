@@ -1,9 +1,10 @@
-from ..db import db
 from app.models.game import Game
 from app.models.guess import Guess
 from app.models.client import Client
 from flask import Blueprint, make_response, abort, request
-from app.helper_functions import *
+from app.helpers.model_utils import create_model
+from app.helpers.validations import *
+from ..db import db
 
 
 bp = Blueprint("games", __name__, url_prefix="/games")
@@ -83,6 +84,6 @@ def get_all_guesses(game_id):
 @bp.route("/<game_id>/hint", methods=["GET"])
 def get_hint(game_id):
     game = validate_model(Game, game_id)
-    hint = generate_hint(game)
+    hint = game.generate_hint()
 
     return hint, 200

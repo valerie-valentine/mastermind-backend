@@ -1,7 +1,8 @@
 from app.models.client import Client
 from app.models.game import Game
 from flask import Blueprint, make_response, abort, request
-from app.helper_functions import *
+from app.helpers.model_utils import create_model
+from app.helpers.validations import *
 from ..db import db
 
 
