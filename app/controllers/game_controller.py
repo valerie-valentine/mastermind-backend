@@ -11,7 +11,7 @@ def generate_game(request):
     request_body = request.get_json()
     game_data = ensure_valid_game_data(request_body)
 
-    if "client_id" in request_body:
+    if "client_id" in request_body and request_body['client_id']:
         client = validate_model_by_id(Client, request_body["client_id"])
         game_data["client_id"] = client.client_id
 
