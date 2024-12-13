@@ -5,7 +5,7 @@ from app import bcrypt
 from ..db import db
 
 
-def validate_model(cls, model_id):
+def validate_model_by_id(cls, model_id):
     try:
         model_id = int(model_id)
     except:
@@ -28,7 +28,7 @@ def validate_model(cls, model_id):
     return model
 
 
-def validate_guess_data(game_data, guess):
+def ensure_valid_guess_data(game_data, guess):
     if game_data.lives == 0:
         abort(make_response({"details": f"Guess: {
               guess} invalid. Lives have been exceeded. No more guesses allowed."}, 400))
@@ -53,7 +53,7 @@ def validate_guess_data(game_data, guess):
     return guess
 
 
-def validate_game_data(request_data):
+def ensure_valid_game_data(request_data):
     if "lives" in request_data:
         if not isinstance(request_data["lives"], int) or int(request_data["lives"]) > 20 or int(request_data["lives"]) < 3:
             abort(make_response(
@@ -74,7 +74,7 @@ def validate_game_data(request_data):
     return request_data
 
 
-def validate_client_data(client_data):
+def ensure_valid_client_data(client_data):
     email = client_data.get("email")
     password = client_data.get("password")
 
@@ -94,7 +94,7 @@ def validate_client_data(client_data):
     return client_data
 
 
-def validate_client_login(request_data):
+def ensure_valid_client_login(request_data):
     email = request_data.get("email")
     password = request_data.get("password")
 
