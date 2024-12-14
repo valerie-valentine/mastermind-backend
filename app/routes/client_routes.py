@@ -46,7 +46,7 @@ def delete_client(client_id):
     db.session.delete(client)
     db.session.commit()
 
-    return make_response({"details":  f"Client: {client.client_id} deleted"}, 204)
+    return make_response({"details":  f"Client: {client.client_id} deleted"}, 200)
 
 
 @bp.route("/top_players", methods=["GET"])

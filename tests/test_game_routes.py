@@ -6,7 +6,7 @@ import pytest
 
 def test_create_game(client):
     # act
-    data = {
+    game_data = {
         "lives": 10,
         "difficulty_level": 4,
         "num_min": 0,
@@ -14,7 +14,7 @@ def test_create_game(client):
     }
 
     # arrange
-    response = client.post("/games", json=data)
+    response = client.post("/games", json=game_data)
 
     # assert
     assert response.status_code == 201
@@ -23,7 +23,7 @@ def test_create_game(client):
 
 def test_create_game_with_client(client, new_client):
     # act
-    data = {
+    game_data = {
         "lives": 10,
         "difficulty_level": 4,
         "num_min": 0,
@@ -32,7 +32,7 @@ def test_create_game_with_client(client, new_client):
     }
 
     # arrange
-    response = client.post("/games", json=data)
+    response = client.post("/games", json=game_data)
 
     # assert
     assert response.status_code == 201
@@ -86,6 +86,7 @@ def test_add_guess_to_game(client, new_game_without_id):
 
 
 def test_get_all_guesses(client, new_game_without_id, guess_belongs_to_game):
+    # arrange
     response = client.get(f"/games/{new_game_without_id.game_id}/guesses")
     response_body = response.get_json()
 

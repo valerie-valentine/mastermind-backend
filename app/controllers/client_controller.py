@@ -33,7 +33,7 @@ def delete_user(client_id):
     client = validate_model_by_id(Client, client_id)
     db.session.delete(client)
     db.session.commit()
-    return make_response({"details": f"Client {client.client_id} deleted"}, 204)
+    return make_response({"details": f"Client {client.client_id} deleted"}, 200)
 
 
 def get_winning_clients():

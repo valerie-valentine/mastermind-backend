@@ -35,7 +35,8 @@ def new_client(app):
     new_client = Client(
         email="test@example.com",
         password="test_password",
-        username="test_user"
+        username="test_user",
+        client_id=1
     )
     db.session.add(new_client)
     db.session.commit()
