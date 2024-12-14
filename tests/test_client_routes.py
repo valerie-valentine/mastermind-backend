@@ -1,9 +1,5 @@
 from app import db
-from app.models.game import Game
-from app.models.guess import Guess
 from app.models.client import Client
-from flask import Blueprint, jsonify, make_response, abort, request
-# from app.helper_functions import *
 
 
 def test_create_client(client):

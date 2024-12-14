@@ -1,7 +1,3 @@
-from app.models.game import Game
-from app.models.guess import Guess
-from app.models.client import Client
-import pytest
 
 
 def test_create_game(client):
