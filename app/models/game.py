@@ -1,4 +1,4 @@
-from app.helpers.random_utils import random_number
+from app.helpers.random_utils import random_number_api
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String
 from sqlalchemy import DateTime, func
@@ -79,7 +79,7 @@ class Game(db.Model):
             difficulty_level=game_data["difficulty_level"],
             num_min=game_data["num_min"],
             num_max=game_data["num_max"],
-            answer=random_number(
+            answer=random_number_api(
                 game_data["difficulty_level"], game_data["num_min"], game_data["num_max"])
         )
 

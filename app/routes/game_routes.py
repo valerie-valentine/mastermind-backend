@@ -10,15 +10,39 @@ from ..db import db
 bp = Blueprint("games", __name__, url_prefix="/games")
 
 
+# @bp.route("", methods=["POST"])
+# def create_game():
+#     request_body = request.get_json()
+#     game_data = ensure_valid_game_data(request_body)
+
+#     if 'client_id' in request_body and request_body['client_id']:
+#         client = validate_model_by_id(Client, request_body['client_id'])
+#         game_data["client_id"] = client.client_id
+#     return create_model(Game, game_data)
+
+
 @bp.route("", methods=["POST"])
 def create_game():
     request_body = request.get_json()
     game_data = ensure_valid_game_data(request_body)
 
-    if 'client_id' in request_body and request_body['client_id']:
-        client = validate_model_by_id(Client, request_body['client_id'])
-        game_data["client_id"] = client.client_id
-    return create_model(Game, game_data)
+    try:
+        game = Game.from_dict(game_data)
+
+        if not game.answer:
+            return make_response({"details": "Error: Game answer not generated correctly."}, 400)
+
+        if 'client_id' in request_body and request_body['client_id']:
+            client = validate_model_by_id(Client, request_body['client_id'])
+            game.client = client
+
+    except KeyError:
+        abort(make_response({"details": "Invalid data"}), 400)
+
+    db.session.add(game)
+    db.session.commit()
+
+    return make_response({"game": game.to_dict()}, 201)
 
 
 @bp.route("/<game_id>", methods=["GET"])
