@@ -1,7 +1,7 @@
 from flask import Flask
 from .db import db, migrate, bcrypt
 from .models import client, game, guess
-from .routes.new_client_routes import bp as client_bp
+from .routes.client_routes import bp as client_bp
 from .routes.game_routes import bp as game_bp
 import os
 from dotenv import load_dotenv
@@ -25,7 +25,7 @@ def create_app(test_config=None):
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
             "SQLALCHEMY_TEST_DATABASE_URI")
 
-    # Initialize extensions
+    # Initialize db extensions
     db.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)

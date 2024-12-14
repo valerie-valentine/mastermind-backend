@@ -18,9 +18,6 @@ def validate_model_by_id(cls, model_id):
     query = db.select(cls).where(getattr(cls, primary_key_column) == model_id)
     model = db.session.scalar(query)
 
-    # query = db.select(cls).where(cls.id == model_id)
-    # model = db.session.scalar(query)
-
     if not model:
         response = {"details": f"{cls.__name__} {model_id} not found"}
         abort(make_response(response, 404))

@@ -30,7 +30,6 @@ def random_number_api(digits, num_min, num_max):
             random_number = "".join(response.text.split())
             return random_number
         else:
-            # Abort with a 503 Service Unavailable status
             response = {"details": f"Random generator API failed with status code: {
                 response.status_code}"}
             abort(make_response(response, 503))

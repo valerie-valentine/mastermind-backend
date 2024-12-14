@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import select
 from app import create_app, db
 from app.models.game import Game
 from app.models.client import Client
@@ -31,13 +32,12 @@ def client(app):
 
 @pytest.fixture
 def new_client(app):
-    new_client_data = {
-        "email": "test@example.com",
-        "password": "test_password",
-        "username": "test_user"
-    }
-    client = Client.from_dict(new_client_data)
-    db.session.add(client)
+    new_client = Client(
+        email="test@example.com",
+        password="test_password",
+        username="test_user"
+    )
+    db.session.add(new_client)
     db.session.commit()
 
     return client
@@ -45,50 +45,49 @@ def new_client(app):
 
 @pytest.fixture
 def new_game_with_id(app):
-    game_data = {
-        "lives": 10,
-        "difficulty_level": 4,
-        "num_min": 0,
-        "num_max": 7,
-    }
-    game_data["client_id"] = 1
-    game = Game.from_dict(game_data)
-    game.answer = "1234"
+    new_game = Game(
+        lives=10,
+        difficulty_level=4,
+        num_min=0,
+        num_max=7,
+        client_id=1,
+        answer="1234"
+    )
 
-    db.session.add(game)
+    db.session.add(new_game)
     db.session.commit()
 
-    return game
+    return new_game
 
 
 @pytest.fixture
 def new_game_without_id(app):
-    game_data = {
-        "lives": 10,
-        "difficulty_level": 4,
-        "num_min": 0,
-        "num_max": 7,
-    }
-    game = Game.from_dict(game_data)
-    game.answer = "1234"
+    new_game = Game(
+        lives=10,
+        difficulty_level=4,
+        num_min=0,
+        num_max=7,
+        answer="1234"
+    )
 
-    db.session.add(game)
+    db.session.add(new_game)
     db.session.commit()
 
-    return game
+    return new_game
 
 
 @pytest.fixture
-def new_guess(app):
-    guess_data = {
-        "guess": "1234",
-    }
-    guess = Guess.from_dict(guess_data)
-    guess.game_id = 1
-    guess.correct_num = 0
-    guess.correct_loc = 0
+def guess_belongs_to_game(app, new_game_without_id):
+    query = select(Game).where(Game.game_id == new_game_without_id.game_id)
+    game = db.session.execute(query).scalars().first()
 
-    db.session.add(guess)
+    new_guess = Guess(
+        guess="1111"
+    )
+
+    # Associate the guess with the game
+    new_guess.game = game
+    game.guesses.append(new_guess)
     db.session.commit()
 
-    return guess
+    return new_guess
