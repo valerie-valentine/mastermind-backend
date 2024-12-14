@@ -2,14 +2,13 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Integer
 from ..db import db, bcrypt
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .game import Game
 
 
 class Client(db.Model):
-    # changed client_id to id
     client_id: Mapped[int] = mapped_column(
         primary_key=True, autoincrement=True)
     email: Mapped[str]

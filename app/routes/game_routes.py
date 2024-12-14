@@ -10,17 +10,6 @@ from ..db import db
 bp = Blueprint("games", __name__, url_prefix="/games")
 
 
-# @bp.route("", methods=["POST"])
-# def create_game():
-#     request_body = request.get_json()
-#     game_data = ensure_valid_game_data(request_body)
-
-#     if 'client_id' in request_body and request_body['client_id']:
-#         client = validate_model_by_id(Client, request_body['client_id'])
-#         game_data["client_id"] = client.client_id
-#     return create_model(Game, game_data)
-
-
 @bp.route("", methods=["POST"])
 def create_game():
     request_body = request.get_json()
@@ -58,7 +47,6 @@ def get_all_games():
     games = db.session.scalars(query)
     games_response = [game.to_dict() for game in games]
 
-    # new version of flask doesn't require jsonify lists
     return games_response, 200
 
 

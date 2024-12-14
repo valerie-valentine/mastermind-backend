@@ -2,6 +2,7 @@ from flask import abort, make_response
 from ..db import db
 
 
+# Creates a new instance of the given model class and saves it to the database
 def create_model(cls, model_data):
     try:
         new_model = cls.from_dict(model_data)

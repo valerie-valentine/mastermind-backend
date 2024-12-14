@@ -56,13 +56,3 @@ def get_winning_client():
     clients_response = [client.to_dict_winners() for client in top_players]
 
     return clients_response, 200
-
-# IDEALLY WANT TO USE THIS BUT WOULD HAVE TO REFACTOR HOW TO GAMES ARE CREATED ON FE
-# @bp.route("/<client_id>/games", methods=["POST"])
-# def create_game_with_client(client_id):
-#     client = validate_model(Client, client_id)
-
-#     request_body = request.get_json()
-#     game_data = validate_game_data(request_body)
-#     game_data["client_id"] = client.client_id
-#     return create_model(Game, game_data)

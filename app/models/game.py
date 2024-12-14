@@ -58,7 +58,7 @@ class Game(db.Model):
                 self.game_status = "Loss"
 
     def generate_hint(self):
-        # can probably just do game_data.guesses[-1]
+        # previously had:
         # guess = [guess.to_dict() for guess in game_data.guesses][-1]
         last_guess = self.guesses[-1].to_dict()
         answer = self.answer
@@ -70,7 +70,7 @@ class Game(db.Model):
 
     @classmethod
     def from_dict(cls, game_data):
-        # if client id is in request (player logged in)
+        # if client id is in request (player is logged in)
         client_id = game_data.get("client_id")
 
         new_game = cls(
