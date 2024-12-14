@@ -36,11 +36,7 @@ def test_delete_client(client):
     db.session.commit()
 
     response = client.delete(f"/clients/{new_client.client_id}")
-    assert response.status_code == 200
-    assert "details" in response.json
-    assert response.json["details"] == f"Client: {
-        new_client.client_id} deleted"
-
+    assert response.status_code == 204
     deleted_client = Client.query.get(new_client.client_id)
     assert deleted_client is None
 

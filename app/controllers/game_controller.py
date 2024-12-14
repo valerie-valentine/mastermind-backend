@@ -34,7 +34,7 @@ def remove_game(game_id):
     game = validate_model_by_id(Game, game_id)
     db.session.delete(game)
     db.session.commit()
-    return make_response({"details": f"Game {game_id} deleted successfully"}, 200)
+    return make_response("", 204)
 
 
 def add_guess_to_game(game_id, request):

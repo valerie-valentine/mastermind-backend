@@ -58,8 +58,7 @@ def test_delete_game(client, new_client, new_game_with_id):
     response = client.delete(f"/games/{new_game_with_id.game_id}")
 
     # assert
-    assert response.status_code == 200
-    assert "details" in response.get_json()
+    assert response.status_code == 204
 
 
 def test_add_guess_to_game(client, new_game_without_id):
