@@ -3,8 +3,8 @@ from flask import abort, make_response
 
 
 def random_number_api(digits, num_min, num_max):
-    url = f'https://www.random.org/integers/?num={digits}&min={
-        num_min}&max={num_max}&col=1&base=10&format=plain&rnd=new'
+    url = f'https://www.random.org/integers/?num={digits}&min={num_min}&max={num_max}' + \
+        '&col=1&base=10&format=plain&rnd=new'
 
     try:
         response = requests.get(url)
