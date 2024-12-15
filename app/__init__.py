@@ -17,10 +17,10 @@ def create_app(test_config=None):
     if test_config is None:
         # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
         #     "SQLALCHEMY_DATABASE_URI")
-        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-            "HEROKU_DATABASE_URI")
         # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        #     "DATABASE_URL")
+        #     "HEROKU_DATABASE_URI")
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+            "DATABASE_URL")
 
     else:
         app.config["TESTING"] = True
