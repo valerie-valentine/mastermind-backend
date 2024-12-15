@@ -4,6 +4,7 @@ from app.models.client import Client
 from app import bcrypt
 from ..db import db
 
+
 def validate_model_by_id(cls, model_id):
     try:
         model_id = int(model_id)
@@ -21,24 +22,31 @@ def validate_model_by_id(cls, model_id):
 
     return model
 
+
 def ensure_valid_guess_data(game_data, guess):
     if game_data.lives == 0:
-        abort(make_response({"details": f"Guess: {guess} invalid. Lives have been exceeded. No more guesses allowed."}, 400))
+        abort(make_response({"details": f"Guess: {
+              guess} invalid. Lives have been exceeded. No more guesses allowed."}, 400))
     if not isinstance(guess, str) or not guess.isdigit():
-        abort(make_response({"details": f"Guess: {guess} invalid. Guess must be a numerical value of type string"}, 400))
+        abort(make_response({"details": f"Guess: {
+              guess} invalid. Guess must be a numerical value of type string"}, 400))
     if len(guess) != game_data.difficulty_level:
-        abort(make_response({"details": f"Guess: {guess} invalid. Guess must be {game_data.difficulty_level} digits long"}, 400))
+        abort(make_response({"details": f"Guess: {guess} invalid. Guess must be {
+              game_data.difficulty_level} digits long"}, 400))
 
     for num in guess:
         int_num = int(num)
         if int_num not in range(game_data.num_min, game_data.num_max + 1):
-            abort(make_response({"details": f"Guess: {guess} invalid. Each digit in the guess must be between the range of {game_data.num_min} and {game_data.num_max}"}, 400))
+            abort(make_response({"details": f"Guess: {guess} invalid. Each digit in the guess must be between the range of {
+                  game_data.num_min} and {game_data.num_max}"}, 400))
 
     for saved_guess in game_data.guesses:
         if guess == saved_guess.guess:
-            abort(make_response({"details": f"Guess: {guess} invalid. Guess has been played previously"}, 400))
+            abort(make_response({"details": f"Guess: {
+                  guess} invalid. Guess has been played previously"}, 400))
 
     return guess
+
 
 def ensure_valid_game_data(request_data):
     if "lives" in request_data:
@@ -60,6 +68,7 @@ def ensure_valid_game_data(request_data):
 
     return request_data
 
+
 def ensure_valid_client_data(client_data):
     email = client_data.get("email")
     password = client_data.get("password")
@@ -74,9 +83,11 @@ def ensure_valid_client_data(client_data):
     existing_client = Client.query.filter_by(email=email).first()
 
     if existing_client:
-        abort(make_response({'details': f'Email "{email}" already exists. Please choose another email.'}, 400))
+        abort(make_response({'details': f'Email "{
+              email}" already exists. Please choose another email.'}, 400))
 
     return client_data
+
 
 def ensure_valid_client_login(request_data):
     email = request_data.get("email")
