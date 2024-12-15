@@ -15,17 +15,17 @@ def create_app(test_config=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     if test_config is None:
-        # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        #     "SQLALCHEMY_DATABASE_URI")
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-            "HEROKU_DATABASE_URI")
+            "SQLALCHEMY_DATABASE_URI")
+        # app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+        #     "HEROKU_DATABASE_URI")
 
     else:
         app.config["TESTING"] = True
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
             "HEROKU_DATABASE_URI")
 
-    # Initialize db extensions
+    # Initialize db & extensions
     db.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)
