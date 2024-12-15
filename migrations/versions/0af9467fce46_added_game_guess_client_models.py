@@ -1,8 +1,8 @@
-"""adding game, guess & client models
+"""Added game, guess, client models
 
-Revision ID: 30ecdbac215b
+Revision ID: 0af9467fce46
 Revises: 
-Create Date: 2024-12-12 19:36:21.820239
+Create Date: 2024-12-14 16:25:25.036841
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '30ecdbac215b'
+revision = '0af9467fce46'
 down_revision = None
 branch_labels = None
 depends_on = None
