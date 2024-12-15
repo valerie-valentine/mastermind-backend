@@ -6,7 +6,8 @@ The backend system for Mastermind, a code breaking game. It provides a RESTful A
 
 **Check out the Website: Deployment coming soon!**
 
-## Getting Started
+
+## Getting Started:
 
 ### Prerequisites
 
@@ -48,7 +49,7 @@ deactivate
 PostgreSQL was used for the database in this project.
 
 ```bash
-createdb mastermind
+CREATE DATABASE my_database_name;
 ```
 
 .env file to connect to database
@@ -60,8 +61,19 @@ SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://postgres:postgres@localhost:5432/m
 ```
 - Depending on what port is used, 5432 may be a different number
 
-Run Flask Server
-Apply migrations to database:
+### Initialize database & run Flask server
+
+Intialize database:
+```bash
+flask db init
+```
+
+Create a migration:
+```bash
+flask db migrate -m "Initial migration"
+```
+
+Apply migrations:
 
 ```bash
 flask db upgrade
@@ -69,8 +81,7 @@ flask db upgrade
 
 Navigate to project folder (mastermind):
 
-```
-bash
+```bash
 flask run
 ```
 
