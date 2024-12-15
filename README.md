@@ -4,7 +4,7 @@ The backend system for Mastermind, a code breaking game. It provides a RESTful A
 
 **Check out the Website: Deployment coming soon!**
 
-### Features  
+### Features/ Extensions  
 
 - **Customizable Difficulty Levels**: Easy (4 digits), Medium (6 digits), Hard (8 digits)  
 - **Custom Range**: Set number range for code generation (e.g., `0-4` → `0404`)  
