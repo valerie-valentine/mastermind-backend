@@ -4,6 +4,18 @@ The backend system for Mastermind, a code breaking game. It provides a RESTful A
 
 **Check out the Website: Deployment coming soon!**
 
+### Features/ Extensions  
+
+- **Customizable Difficulty Levels**: Easy (4 digits), Medium (6 digits), Hard (8 digits)  
+- **Custom Range**: Set number range for code generation (e.g., `0-4` → `0404`)  
+- **Custom Lives**: Choose between 3 to 20 lives  
+- **User Profiles**: Save games, continue unfinished games, view past game data  
+- **Gameplay Tools**: Track previous guesses, generate hints, view instructions  
+- **Leaderboard**: Top 10 players by games won  
+- **Account Management**: Delete user accounts or specific games  
+- **Security**: Passwords stored with hashing
+- **Error-Handling**: Validation on the backend & frontend to handle bad inputs
+
 ### Backend Design & Considerations
 
 While revisiting this project for a second iteration, my primary focus was on refactoring with an emphasis on code organization, encapsulation, and separation of concerns. In the initial implementation, many of my helper functions were consolidated into a single, bloated file. To improve maintainability, I refactored the code by introducing a helpers module and distributing the functions into individual files based on their respective responsibilities. For example:
@@ -25,19 +37,7 @@ I've also included error handling for my random_number_api function to address p
 
 Refactoring introduced several challenges, particularly around breaking changes in models and routes. Debugging these issues required careful planning and a structured workflow. I used feature branches to experiment with changes and tracked the most stable version of the application. Incremental refactoring, paired with testing the backend in conjunction with the frontend, allowed me to identify and resolve bugs efficiently. This experience taught me the importance of a systematic approach to refactoring, thorough testing, and maintaining a stable workflow throughout the process.
 
-
-### Features/ Extensions  
-
-- **Customizable Difficulty Levels**: Easy (4 digits), Medium (6 digits), Hard (8 digits)  
-- **Custom Range**: Set number range for code generation (e.g., `0-4` → `0404`)  
-- **Custom Lives**: Choose between 3 to 20 lives  
-- **User Profiles**: Save games, continue unfinished games, view past game data  
-- **Gameplay Tools**: Track previous guesses, generate hints, view instructions  
-- **Leaderboard**: Top 10 players by games won  
-- **Account Management**: Delete user accounts or specific games  
-- **Security**: Passwords stored with hashing
-- **Error-Handling**: Validation on the backend & frontend to handle bad inputs
-
+# How to Run:
 
 ### Prerequisites
 
