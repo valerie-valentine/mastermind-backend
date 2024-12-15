@@ -88,8 +88,7 @@ flask db upgrade
 
 Navigate to project folder (mastermind):
 
-```
-bash
+```bash
 flask run
 ```
 
