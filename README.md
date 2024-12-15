@@ -37,7 +37,7 @@ Refactoring introduced several challenges, particularly around breaking changes 
 - **Security**: Passwords stored with hashing
 - **Error-Handling**: Validation on the backend & frontend to handle bad inputs
 
-# How to Run:
+## How to Run:
 
 ### Prerequisites
 
