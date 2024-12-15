@@ -64,9 +64,9 @@ class Game(db.Model):
         answer = self.answer
 
         if int((last_guess["guess"])) < int(answer):
-            return {'hint': f"The answer is greater than your last guess {last_guess["guess"]}"}
+            return {'hint': f"The answer is greater than your last guess {last_guess['guess']}"}
         else:
-            return {'hint': f"The answer is less than your last guess {last_guess["guess"]}"}
+            return {'hint': f"The answer is less than your last guess {last_guess['guess']}"}
 
     @classmethod
     def from_dict(cls, game_data):
