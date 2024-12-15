@@ -90,6 +90,21 @@ To maintain consistency and scalability, I aimed to follow the MVC design patter
 
 I've also included error handling for my random_number_api function to address potential issues such as API failures, network interruptions, or service unavailability.
 
+## Extensions:
+
+Customizable difficulty levels:
+    Easy (4 digit code)
+    Medium (6 digit codes)
+    Hard (8 digit code)
+Users are able to choose from what range they would like the numbers to be generated from (i.e: 0-4 -> 0404)
+Users are able to customize how many lives may be played (no less than 3 or more than 20)
+Option to login/create a user profile that can save the games played and allow you to continue unfinished games, and view your past games data
+Ability to see previous guesses, instructions and feedback of guess
+Leaderboard that displays the top 10 players based off of most games won
+Ability for a user to delete a game or user account
+Ability to store and retrieve hashed passwords
+Generate a hint for user
+
 ### Challenges and Lessons Learned
 
 Refactoring introduced several challenges, particularly around breaking changes in models and routes. Debugging these issues required careful planning and a structured workflow. I used feature branches to experiment with changes and tracked the most stable version of the application. Incremental refactoring, paired with testing the backend in conjunction with the frontend, allowed me to identify and resolve bugs efficiently. This experience taught me the importance of a systematic approach to refactoring, thorough testing, and maintaining a stable workflow throughout the process.
