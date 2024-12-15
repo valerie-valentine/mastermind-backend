@@ -13,7 +13,8 @@ The backend system for Mastermind, a code breaking game. It provides a RESTful A
 - **Gameplay Tools**: Track previous guesses, generate hints, view instructions  
 - **Leaderboard**: Top 10 players by games won  
 - **Account Management**: Delete user accounts or specific games  
-- **Security**: Passwords stored with hashing  
+- **Security**: Passwords stored with hashing
+- **Error-Handling**: Validation on the backend & frontend to handle bad inputs
 
 
 ### Prerequisites
