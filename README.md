@@ -92,18 +92,37 @@ I've also included error handling for my random_number_api function to address p
 
 ### Extensions:
 
-Customizable difficulty levels:
-    Easy (4 digit code)
-    Medium (6 digit codes)
-    Hard (8 digit code)
-Users are able to choose from what range they would like the numbers to be generated from (i.e: 0-4 -> 0404)
-Users are able to customize how many lives may be played (no less than 3 or more than 20)
-Option to login/create a user profile that can save the games played and allow you to continue unfinished games, and view your past games data
-Ability to see previous guesses, instructions and feedback of guess
-Leaderboard that displays the top 10 players based off of most games won
-Ability for a user to delete a game or user account
-Ability to store and retrieve hashed passwords
-Generate a hint for user
+### Features  
+
+- **Customizable Difficulty Levels**  
+  - Easy: 4-digit code  
+  - Medium: 6-digit code  
+  - Hard: 8-digit code  
+
+- **Custom Range for Number Generation**  
+  - Users can choose a range for number generation (e.g., `0-4` generates `0404`).  
+
+- **Customizable Lives**  
+  - Users can set the number of lives (minimum of 3, maximum of 20).  
+
+- **User Profiles**  
+  - Create and log in to user profiles.  
+  - Save games to continue unfinished ones.  
+  - View past game data, including stats.  
+
+- **Enhanced Gameplay Features**  
+  - View previous guesses, instructions, and feedback for each guess.  
+  - Generate hints to assist during gameplay.  
+
+- **Leaderboard**  
+  - Displays the top 10 players based on the most games won.  
+
+- **Account and Game Management**  
+  - Option to delete user accounts or specific games.  
+
+- **Security Features**  
+  - Store and retrieve hashed passwords for secure authentication.  
+
 
 ## Challenges and Lessons Learned
 
