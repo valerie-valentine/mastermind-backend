@@ -4,6 +4,37 @@ The backend system for Mastermind, a code breaking game. It provides a RESTful A
 
 **Check out the Website: Deployment coming soon!**
 
+### Features  
+
+- **Customizable Difficulty Levels**  
+  - Easy: 4-digit code  
+  - Medium: 6-digit code  
+  - Hard: 8-digit code  
+
+- **Custom Range for Number Generation**  
+  - Users can choose a range for number generation (e.g., `0-4` generates `0404`).  
+
+- **Customizable Lives**  
+  - Users can set the number of lives (minimum of 3, maximum of 20).  
+
+- **User Profiles**  
+  - Create and log in to user profiles.  
+  - Save games to continue unfinished ones.  
+  - View past game data, including stats.  
+
+- **Enhanced Gameplay Features**  
+  - View previous guesses, instructions, and feedback for each guess.  
+  - Generate hints to assist during gameplay.  
+
+- **Leaderboard**  
+  - Displays the top 10 players based on the most games won.  
+
+- **Account and Game Management**  
+  - Option to delete user accounts or specific games.  
+
+- **Security Features**  
+  - Store and retrieve hashed passwords for secure authentication.
+
 ### Prerequisites
 
 - flask
@@ -89,40 +120,7 @@ Since my previous work on this project, I also updated the implementation to ref
 To maintain consistency and scalability, I aimed to follow the MVC design pattern. In my console-based application, the MVC pattern naturally aligned with the structure. However, in the backend version, this structure felt somewhat redundant. The existing architecture already adhered to MVC principles, with the database serving as the model, the routes acting as controllers, and the React frontend as the view layer (itself an MVC application). In a separate branch (mastermind-backend-2.0), I experimented with additional abstraction by creating client_controllers and game_controllers. While this provided theoretical flexibility for expanding database logic in the future, it ultimately felt redundant and resembled middleware functions without significant added value. I reverted to a simpler, route-driven approach while keeping this abstraction in mind for future scalability.
 
 I've also included error handling for my random_number_api function to address potential issues such as API failures, network interruptions, or service unavailability.
-
-### Extensions:
-
-### Features  
-
-- **Customizable Difficulty Levels**  
-  - Easy: 4-digit code  
-  - Medium: 6-digit code  
-  - Hard: 8-digit code  
-
-- **Custom Range for Number Generation**  
-  - Users can choose a range for number generation (e.g., `0-4` generates `0404`).  
-
-- **Customizable Lives**  
-  - Users can set the number of lives (minimum of 3, maximum of 20).  
-
-- **User Profiles**  
-  - Create and log in to user profiles.  
-  - Save games to continue unfinished ones.  
-  - View past game data, including stats.  
-
-- **Enhanced Gameplay Features**  
-  - View previous guesses, instructions, and feedback for each guess.  
-  - Generate hints to assist during gameplay.  
-
-- **Leaderboard**  
-  - Displays the top 10 players based on the most games won.  
-
-- **Account and Game Management**  
-  - Option to delete user accounts or specific games.  
-
-- **Security Features**  
-  - Store and retrieve hashed passwords for secure authentication.  
-
+  
 
 ## Challenges and Lessons Learned
 
