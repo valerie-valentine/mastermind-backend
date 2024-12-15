@@ -107,5 +107,5 @@ I've also included error handling for my random_number_api function to address p
 
 Refactoring introduced several challenges, particularly around breaking changes in models and routes. Debugging these issues required careful planning and a structured workflow. I used feature branches to experiment with changes and tracked the most stable version of the application. Incremental refactoring, paired with testing the backend in conjunction with the frontend, allowed me to identify and resolve bugs efficiently. This experience taught me the importance of a systematic approach to refactoring, thorough testing, and maintaining a stable workflow throughout the process.
 
-# Future Updates
+### Future Updates
 I would like to extend to multi-player and include a timer
