@@ -6,34 +6,15 @@ The backend system for Mastermind, a code breaking game. It provides a RESTful A
 
 ### Features  
 
-- **Customizable Difficulty Levels**  
-  - Easy: 4-digit code  
-  - Medium: 6-digit code  
-  - Hard: 8-digit code  
+- **Customizable Difficulty Levels**: Easy (4 digits), Medium (6 digits), Hard (8 digits)  
+- **Custom Range**: Set number range for code generation (e.g., `0-4` → `0404`)  
+- **Custom Lives**: Choose between 3 to 20 lives  
+- **User Profiles**: Save games, continue unfinished games, view past game data  
+- **Gameplay Tools**: Track previous guesses, generate hints, view instructions  
+- **Leaderboard**: Top 10 players by games won  
+- **Account Management**: Delete user accounts or specific games  
+- **Security**: Passwords stored with hashing  
 
-- **Custom Range for Number Generation**  
-  - Users can choose a range for number generation (e.g., `0-4` generates `0404`).  
-
-- **Customizable Lives**  
-  - Users can set the number of lives (minimum of 3, maximum of 20).  
-
-- **User Profiles**  
-  - Create and log in to user profiles.  
-  - Save games to continue unfinished ones.  
-  - View past game data, including stats.  
-
-- **Enhanced Gameplay Features**  
-  - View previous guesses, instructions, and feedback for each guess.  
-  - Generate hints to assist during gameplay.  
-
-- **Leaderboard**  
-  - Displays the top 10 players based on the most games won.  
-
-- **Account and Game Management**  
-  - Option to delete user accounts or specific games.  
-
-- **Security Features**  
-  - Store and retrieve hashed passwords for secure authentication.
 
 ### Prerequisites
 
