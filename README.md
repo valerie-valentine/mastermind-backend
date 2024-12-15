@@ -1,10 +1,20 @@
-# Mastermind Backend Server
+# Mastermind Backend Server 2.0
 
 The backend system for Mastermind, a code breaking game. It provides a RESTful API for creating, reading, updating, and deleting (CRUD) resources required to play the game. Built with React, Flask, and PostgreSQL. The backend server is being utilized to support the Mastermind site.
 
-**Check out the Website: [Mastermind](https://valerie-valentine.github.io/mastermin-frontend)**
+**Check out the Website: Deployment coming soon!**
 
-## Getting Started
+### Features/ Extensions  
+
+- **Customizable Difficulty Levels**: Easy (4 digits), Medium (6 digits), Hard (8 digits)  
+- **Custom Range**: Set number range for code generation (e.g., `0-4` → `0404`)  
+- **Custom Lives**: Choose between 3 to 20 lives  
+- **User Profiles**: Save games, continue unfinished games, view past game data  
+- **Gameplay Tools**: Track previous guesses, generate hints, view instructions  
+- **Leaderboard**: Top 10 players by games won  
+- **Account Management**: Delete user accounts or specific games  
+- **Security**: Passwords stored with hashing  
+
 
 ### Prerequisites
 
@@ -76,60 +86,26 @@ flask run
 
 Tests can be run using the command pytest tests/test_routes.py from the mastermind folder.
 
-### MVP
-
-I began with a command line script for this game in order to break down the logic and functionality required to implement a minimum viable product. Narrowing my initial scope to just focusing on how to calculate the number of correct digits and location in the guess, generate a random number, as well as input validation and error handling. Once I was able to establish the logic, I wanted to create a companion site to serve as a visual for the game. Initially, I just wanted the user to be able to play a game against the computer. Once that was established, I was able to then focus on the additional features: i.e. login, user profile, account creation and deletion.
-Additional Features
-
-    Customizable difficulty levels:
-        Easy (4 digit code)
-        Medium (6 digit codes)
-        Hard (8 digit code)
-    Users are able to choose from what range they would like the numbers to be generated from (i.e: 0-4 -> 0404)
-    Users are able to customize how many lives may be played (no less than 3 or more than 20)
-    Option to login/create a user profile that can save the games played and allow you to continue unfinished games, and view your past games data
-    Ability to see previous guesses, instructions and feedback of guess
-    Leaderboard that displays the top 10 players based off of most games won
-    Ability for a user to delete a game or user account
-    Ability to store and retrieve hashed passwords
-    Generate a hint for user
-
 ### Backend Design & Considerations
 
-I utilized PostgreSQL, Flask and SQLAlchemy for the backend of this project because it seemed to be a relatively lightweight application. The backend for mastermind consists of 3 tables: Games, Guesses, and Clients. The core logic I focused on implementing was being able to generate a game, guess, user and check a guess against an answer. After achieving these tasks, I really wanted to incorporate different ways to make this game customizable. This included allowing users to customize the start settings for a game, ability for users to create an account and view history of games, choosing the length of the code and what type of digits it will be. With these extensions particularly, persisting user information, really required me to research about authentication and authorization principles. I initially used username and password to authenticate a user, but refactored the application to utilize password hashing to handle security around passing sensitive information. Additionally, I created a third field "email" to use along authentication with the hashed password. This allowed me to then display user's display handles (this case username) where needed visibly while keeping their email hidden.
-Models
+While revisiting this project for a second iteration, my primary focus was on refactoring with an emphasis on code organization, encapsulation, and separation of concerns. In the initial implementation, many of my helper functions were consolidated into a single, bloated file. To improve maintainability, I refactored the code by introducing a helpers module and distributing the functions into individual files based on their respective responsibilities. For example:
 
-    Game Model (Game Table):
-        Stores information about the game (lives, difficulty_level, answer), as well as what parameters were utilized in the generation of the answer (num_min, num_max)
-        Games have a one to many relationship with guesses, with guesses having to be associated with a game.
-        Users have a one to many relationship with Games. To support the greatest flexibility though, games do not have to be associated with a user (can have the foreign key be None)
-    Guess Model (Guess Table):
-        Stores information about guesses for the game, including the guess value, how many correct digits are included and how many are in the correct location
-        Each guess is associated with a game and cannot be added to the database without an existing relationship to a game
-    User Model (User Table):
-        I wanted to add a way for users to see their game history, see what games they've won/lost, and also be able to continue unfinished games
-        Created a user model that stores a user's username, email, password, score, and their games
+    - helpers/validation.py contains all validation-related helper functions.
+    - helpers/random_utils.py handles network calls for generating random numbers.
+    - helpers/module_helpers.py includes reusable module-specific functionality.
 
-### Routes
+Additionally, I encapsulated shared functionality by integrating related helper methods into their respective classes as instance methods. For instance, in the Game model, I added methods such as generate_hint and check_status, which encapsulate game logic and update the model's attributes as needed.
 
-The routes folder consists of the API endpoints, with routes_helper consisting of helper functions for input validation and external API calls to the random number generator.
-Client Routes:
+Since my previous work on this project, I also updated the implementation to reflect new practices in Flask and SQLAlchemy. Models now utilize Python type hinting, and the previously used query class member has been deprecated. I adopted the preferred approach of building queries using SQL-like functions and executing them with db.session. Similarly, newer Flask versions no longer require explicitly "jsonifying" lists, so I streamlined my route responses to directly return dictionaries and lists.
 
-    - Endpoints support creating a user
-    - Logging in a user (validating that user exists, username and password are correct)
-    - Getting a user's information
-    - All the games belonging to a user
-    - Deleting a user's account
-    - Getting the top users for the game
+To maintain consistency and scalability, I aimed to follow the MVC design pattern. In my console-based application, the MVC pattern naturally aligned with the structure. However, in the backend version, this structure felt somewhat redundant. The existing architecture already adhered to MVC principles, with the database serving as the model, the routes acting as controllers, and the React frontend as the view layer (itself an MVC application). In a separate branch (mastermind-backend-2.0), I experimented with additional abstraction by creating client_controllers and game_controllers. While this provided theoretical flexibility for expanding database logic in the future, it ultimately felt redundant and resembled middleware functions without significant added value. I reverted to a simpler, route-driven approach while keeping this abstraction in mind for future scalability.
 
-Games Routes:
+I've also included error handling for my random_number_api function to address potential issues such as API failures, network interruptions, or service unavailability.
+  
 
-    - Endpoints for creating a game
-    - Creating a guess (guess must be associated with a game)
-    - Getting a game from a game_id
-    - Getting all guesses for a game from the game_id
-    - Getting a hint based off of last guess made for a game
-    - Deleting a game from the user's account
-    - Getting all games for the application
+## Challenges and Lessons Learned
 
+Refactoring introduced several challenges, particularly around breaking changes in models and routes. Debugging these issues required careful planning and a structured workflow. I used feature branches to experiment with changes and tracked the most stable version of the application. Incremental refactoring, paired with testing the backend in conjunction with the frontend, allowed me to identify and resolve bugs efficiently. This experience taught me the importance of a systematic approach to refactoring, thorough testing, and maintaining a stable workflow throughout the process.
 
+### Future Updates
+I would like to extend to multi-player and include a timer
